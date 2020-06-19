@@ -1,3 +1,4 @@
+/*
 async function projectFilterListener(evt) {
   evt.preventDefault();
   var current = document.querySelector('.projects-filters .menu-link.active');
@@ -113,7 +114,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-  /*
+  */
+
+/*
   elems = document.querySelectorAll('.carousel');
   instances = M.Carousel.init(elems, {
     indicators: true,
@@ -123,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
     noWrap: true,
   });
   */
+/*
 });
 
 projectFilterElements();
@@ -141,3 +145,106 @@ function headerDecoration() {
 }
 
 headerDecoration();
+*/
+
+/*
+document.addEventListener('DOMContentLoaded', function () {
+  var elems = document.querySelectorAll('.carousel-card-image.is-hidden');
+  elems.forEach((elem) => {
+    console.log(elem.parentElement);
+    elem.parentElement.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      var selected = evt.currentTarget.parentElement;
+      selected.classList.remove('is-one-quarter');
+      selected.classList.remove('carousel-item');
+      var current = document.querySelector('.carousel-card');
+      current.classList.remove(['carousel-card', 'is-half']);
+      current.classList.add('carousel-item', 'is-one-quarter');
+      current.querySelector('img').classList.add('is-hidden');
+      selected.classList.add('is-half');
+      selected.classList.add('carousel-card');
+      elem.classList.remove('is-hidden');
+      console.log(evt.currentTarget.parentElement);
+    });
+  });
+});
+*/
+
+async function restRequest(endpoint, callback) {
+  const req = await fetch(`${restApi.url}${endpoint}`);
+  return await req.json().then((res) => callback(res));
+}
+
+function isInViewport(elem) {
+  const bounding = elem.getBoundingClientRect();
+  return bounding.top + bounding.height > 120;
+}
+
+function getFeaturedImage(post) {
+  return post['_embedded']['wp:featuredmedia'][0];
+}
+
+async function carouselItemListener(evt) {
+  evt.preventDefault();
+  const postId = evt.target.dataset.postId;
+
+  const endpoint = `wp/v2/project/${postId}?_embed`;
+  const featuredImage = await restRequest(endpoint, getFeaturedImage);
+  const imageUrl =
+    featuredImage['media_details']['sizes']['project-large']['source_url'];
+  const imageTag = document.querySelector('.carousel-card-image');
+
+  console.log(imageTag.getAttribute('src'));
+  imageTag.setAttribute('src', imageUrl);
+  console.log(imageTag.getAttribute('src'));
+}
+
+function carouselInit() {
+  const selector = '.carousel-item-content[data-post-id]';
+  const items = document.querySelectorAll(selector);
+  items.forEach((item) => item.addEventListener('click', carouselItemListener));
+}
+
+function mapFeaturedProjects(res) {
+  return res.acf['projetos_itens'].reduce(
+    (acc, current) => (acc += `${current.ID},`),
+    '',
+  );
+}
+
+function mapFeaturedImages(res) {
+  return res.map((item) => getFeaturedImage(item));
+}
+
+async function getFeaturedProjects() {
+  let endpoint = 'acf/v3/pages/9';
+  const projectsIds = await restRequest(endpoint, mapFeaturedProjects);
+
+  endpoint = `wp/v2/project?_embed&include=${projectsIds}`;
+  const featuredImages = await restRequest(endpoint, mapFeaturedImages);
+  console.log(featuredImages);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  carouselInit();
+  getFeaturedProjects();
+
+  const menuHamb = document.querySelector('[data-target=navbarMenuHeroC]');
+  menuHamb.addEventListener('click', function (evt) {
+    document.querySelector('#navbarMenuHeroC').classList.toggle('is-active');
+  });
+});
+
+document.addEventListener('scroll', function (evt) {
+  const elem = document.querySelector('.hero.is-fullheight');
+  if (elem) {
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+      if (isInViewport(elem)) {
+        navbar.classList.remove('nav-background', 'is-fixed-top');
+      } else {
+        navbar.classList.add('nav-background', 'is-fixed-top');
+      }
+    }
+  }
+});

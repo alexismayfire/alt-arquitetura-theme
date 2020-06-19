@@ -2,30 +2,14 @@
 
 // Load CSS
 function load_css() {
-    wp_register_style( 'materialize', get_template_directory_uri() . '/css/materialize.min.css', array(), false, 'all' );
-    wp_enqueue_style( 'materialize' );
-
-    wp_register_style( 'materialize_icons', 'https://fonts.googleapis.com/icon?family=Material+Icons', array(), false, 'all');
-    wp_enqueue_style( 'materialize_icons' );
-
     wp_register_style( 'montserrat', 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap', array(), false, 'all' );
     wp_enqueue_style( 'montserrat' );
-
-    wp_register_style( 'base', get_template_directory_uri() . '/css/base.css', array(), false, 'all' );
-    wp_enqueue_style( 'base' );
 
     wp_register_style( 'main', get_template_directory_uri() . '/css/main.css', array(), false, 'all' );
     wp_enqueue_style( 'main' );
 }
 
-function load_editor_css() {
-    /*
-    wp_register_style( 'materialize', get_template_directory_uri() . '/css/materialize.min.css', array(), false, 'all' );
-    wp_enqueue_style( 'materialize' );
-    */
-    wp_register_style( 'materialize_icons', 'https://fonts.googleapis.com/icon?family=Material+Icons', array(), false, 'all');
-    wp_enqueue_style( 'materialize_icons' );
-    
+function load_editor_css() {    
     wp_register_style( 'main', get_template_directory_uri() . '/css/main.css', array(), false, 'all' );
     wp_enqueue_style( 'main' );
 
@@ -38,12 +22,12 @@ add_action( 'enqueue_block_editor_assets', 'load_editor_css' );
 
 // Load Javascript
 function load_js() {
-    wp_register_script( 'materialize', get_template_directory_uri() . '/js/materialize.min.js', array(), false, true );
-    wp_enqueue_script( 'materialize' );
-
     wp_register_script( 'main', get_template_directory_uri() . '/js/main.js', array(), false, true );
     wp_enqueue_script( 'main' );
-    wp_localize_script('main', 'ajax', array('url' => admin_url('admin-ajax.php')));
+    wp_localize_script( 'main', 'ajax', array('url' => admin_url('admin-ajax.php')));
+    wp_localize_script( 'main', 'restApi', array('url' => rest_url() ) );
+
+    wp_register_script( 'projects', get_template_directory_uri() . '/js/projects.js', array(), false, true );
 }
 
 add_action( 'wp_enqueue_scripts', 'load_js' );
@@ -56,12 +40,13 @@ add_theme_support( 'widgets' );
 // Menus
 register_nav_menus( 
     array(
-        'top-menu' => 'Top Menu Location',
-        'mobile-menu' => 'Mobile Menu Location',
+        'top-menu' => 'Menu Desktop',
+        'mobile-menu' => 'Menu Mobile',
     )
 );
 
 // Media
+add_image_size( 'team', 160, 235, true );
 add_image_size( 'blog-large', 800, 400, true );
 add_image_size( 'blog-small', 300, 200, true );
 add_image_size( 'project-gallery', 1500, 600, true );
@@ -80,7 +65,6 @@ function custom_sidebars() {
 add_action( 'widgets_init', 'custom_sidebars' );
 
 // Custom Post Types
-
 function team_post_type() {
     $args = array(
         'labels' => array(
@@ -95,6 +79,21 @@ function team_post_type() {
     register_post_type( 'team', $args );
 }
 add_action( 'init', 'team_post_type' );
+
+function services_post_type() {
+    $args = array(
+        'labels' => array(
+            'name' => 'Serviços',
+            'singular_name' => 'Serviço',
+        ),
+        'public' => false,
+        'supports' => array('title', 'editor', 'custom-fields'),
+        'menu_icon' => 'dashicons-screenoptions',
+        'show_ui' => true,
+    );
+    register_post_type( 'services', $args );
+}
+add_action( 'init', 'services_post_type' );
 
 function projects_post_type() {
     $args = array(
@@ -258,5 +257,20 @@ if ( ! function_exists( 'project_gallery_block_output' ) ) {
         return ob_get_clean();
     }
 }
+
+// Filters
+add_filter( 'the_content', 'filter_project_content', 1 );
+ 
+function filter_project_content( $content ) {
+    // Check if we're inside the main loop in a single Project.
+    if ( is_singular( 'project' ) && in_the_loop() && is_main_query() ) {
+        return strip_tags( $content, 'p' );
+    }
+ 
+    return $content;
+}
+
+// Plugins
+add_filter('wpcf7_autop_or_not', '__return_false');
 
 ?>

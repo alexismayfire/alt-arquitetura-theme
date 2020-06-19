@@ -1,0 +1,101 @@
+.navbar {
+  .container {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-menu {
+    justify-content: center;
+  }
+}
+
+.navbar.is-fixed-top {
+  transition: all 300ms ease-in-out;
+}
+
+.nav-background {
+  background-color: #fafafa !important;
+  box-shadow: $box-shadow;
+  opacity: 0.9;
+
+  transition: all 300ms ease-in-out;
+}
+
+.navbar-social-container {
+  @include widescreen {
+    margin-left: 2em;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-menu {
+    flex-grow: 0;
+  }
+}
+
+.navbar-items-container {
+  display: flex;
+  justify-content: space-evenly;
+
+  .menu-item {
+    margin: 0 1em;
+
+    a {
+      color: $primary;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+
+  .menu-item-icon {
+    margin: 0 0.5em;
+  }
+}
+
+.navbar-items-container.inverted {
+  .menu-item {
+    a {
+      color: $white;
+    }
+  }
+}
+
+.navbar-brand {
+  align-items: center;
+
+  img {
+    max-height: 120px;
+  }
+}
+
+.navbar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(250, 250, 250, 0.8) !important;
+  /*
+  box-shadow: $card-header-shadow;
+  transition: all $speed $easing;
+  */
+}
+
+.navbar-menu.is-active {
+  @include mobile {
+    display: grid;
+    height: calc(100vh - 120px);
+
+    .navbar-items-container:not(.navbar-social-container) {
+      display: grid;
+    }
+  }
+}
+
+/** 
+WP overrides 
+TODO: highlight current menu item
+**/
+.current-menu-item:not(.menu-item-object-custom) {
+  text-decoration: underline;
+}

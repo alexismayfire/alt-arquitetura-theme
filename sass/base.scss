@@ -5,8 +5,10 @@ body {
   line-height: 150%;
 }
 
-header {
-  background: #323232;
-  width: 100%;
-  height: 64px;
+p {
+  margin-bottom: 16px;
+}
+
+.textarea {
+  resize: none;
 }
