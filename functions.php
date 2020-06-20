@@ -113,6 +113,7 @@ function projects_post_type() {
         'show_in_rest' => true,
         'menu_icon' => 'dashicons-building',
         'show_ui' => true,
+        'publicly_queryable' => true,
     );
     register_post_type( 'project', $args );
 }
@@ -126,6 +127,7 @@ function projects_taxonomy() {
         ),
         'hierarchical' => true,
         'public' => true,
+        'show_in_rest' => true,
     );
     register_taxonomy( 'segments', array( 'project' ), $args );
 }

@@ -181,53 +181,74 @@ function isInViewport(elem) {
 }
 
 function getFeaturedImage(post) {
-  return post['_embedded']['wp:featuredmedia'][0];
+  const media = post['_embedded']['wp:featuredmedia'][0];
+  return media['media_details']['sizes']['project-large']['source_url'];
+}
+
+function getCustomTaxonomy(post) {
+  const term = post['_embedded']['wp:term'][0];
+  return term[0]['name'];
 }
 
 async function carouselItemListener(evt) {
   evt.preventDefault();
   const postId = evt.target.dataset.postId;
 
-  const endpoint = `wp/v2/project/${postId}?_embed`;
-  const featuredImage = await restRequest(endpoint, getFeaturedImage);
-  const imageUrl =
-    featuredImage['media_details']['sizes']['project-large']['source_url'];
-  const imageTag = document.querySelector('.carousel-card-image');
+  const card = document.querySelector('.carousel-card');
+  const titleTag = card.querySelector('.carousel-card-title');
+  const segmentTag = card.querySelector('span');
+  const imageTag = card.querySelector('.carousel-card-image');
+  const linkTags = card.querySelectorAll('a');
 
-  console.log(imageTag.getAttribute('src'));
-  imageTag.setAttribute('src', imageUrl);
-  console.log(imageTag.getAttribute('src'));
+  const proj = window.projects[postId];
+  titleTag.innerHTML = proj.title;
+  segmentTag.innerHTML = proj.segment;
+  imageTag.setAttribute('src', proj.image);
+  linkTags.forEach((link) => link.setAttribute('href', proj.slug));
+
+  const buttons = document.querySelector('carousel-item');
 }
 
-function carouselInit() {
-  const selector = '.carousel-item-content[data-post-id]';
-  const items = document.querySelectorAll(selector);
-  items.forEach((item) => item.addEventListener('click', carouselItemListener));
-}
-
-function mapFeaturedProjects(res) {
+function mapFeaturedProjectsIds(res) {
   return res.acf['projetos_itens'].reduce(
     (acc, current) => (acc += `${current.ID},`),
     '',
   );
 }
 
-function mapFeaturedImages(res) {
-  return res.map((item) => getFeaturedImage(item));
+function mapFeaturedProjects(res) {
+  return res.reduce(
+    (acc, item) => ({
+      ...acc,
+      [item.id]: {
+        title: item.title.rendered,
+        segment: getCustomTaxonomy(item),
+        image: getFeaturedImage(item),
+        slug: item.slug,
+      },
+    }),
+    {},
+  );
 }
 
 async function getFeaturedProjects() {
   let endpoint = 'acf/v3/pages/9';
-  const projectsIds = await restRequest(endpoint, mapFeaturedProjects);
+  const projectsIds = await restRequest(endpoint, mapFeaturedProjectsIds);
 
   endpoint = `wp/v2/project?_embed&include=${projectsIds}`;
-  const featuredImages = await restRequest(endpoint, mapFeaturedImages);
-  console.log(featuredImages);
+  window.projects = await restRequest(endpoint, mapFeaturedProjects);
+}
+
+async function carouselInit() {
+  await getFeaturedProjects();
+
+  const selector = '.carousel-item-content[data-post-id]';
+  const items = document.querySelectorAll(selector);
+  items.forEach((item) => item.addEventListener('click', carouselItemListener));
 }
 
 document.addEventListener('DOMContentLoaded', function () {
   carouselInit();
-  getFeaturedProjects();
 
   const menuHamb = document.querySelector('[data-target=navbarMenuHeroC]');
   menuHamb.addEventListener('click', function (evt) {
