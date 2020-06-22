@@ -166,7 +166,7 @@ function scrollInit(evt) {
   const hero = document.querySelector('.hero.is-fullheight');
   const container = document.querySelector('header ~ div');
   if (elem) {
-    if (isInViewport(elem)) {
+    if (isInViewport(elem) && !window.location.hash) {
       if (!home) {
         container.style.marginTop = 0;
       }

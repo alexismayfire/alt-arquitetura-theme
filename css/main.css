@@ -7540,6 +7540,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   justify-content: center; }
 
 .navbar-menu {
+  align-items: center;
   justify-content: center; }
 
 .navbar.is-fixed-top {
