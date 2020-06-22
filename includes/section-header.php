@@ -26,25 +26,15 @@ $header ? wp_get_attachment_url($header->ID) : '';
     </div>
     <div id="navbarMenuHeroC" class="navbar-menu">
     <?php 
-        if ( is_singular( 'project' ) ):
-          wp_nav_menu(
-              array(
+        wp_nav_menu( 
+            array( 
                 'theme_location' => 'top-menu',
-                'menu_class' => 'navbar-items-container inverted',
+                'menu_class' => 'navbar-items-container',
                 'container' => false,
-              )
-            );
-        else:
-          wp_nav_menu( 
-              array( 
-                  'theme_location' => 'top-menu',
-                  'menu_class' => 'navbar-items-container',
-                  'container' => false,
-              )   
-          );
-        endif;
+            )   
+        );
     ?>
-    <ul class="navbar-items-container navbar-social-container <?php if ( is_singular( 'project' ) ): echo "inverted"; endif; ?>">
+    <ul class="navbar-items-container navbar-social-container">
       <li class="menu-item menu-item-icon">
         <a target="_blank" href="https://instagram.com/alt_arquitetura">
           <i class="fab fa-lg fa-instagram"></i>

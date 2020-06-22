@@ -10,7 +10,7 @@
         </div>
         <div class="column is-half projects-categories">
             <span>Filtrar por:</span>
-            <a class="button-filter is-active">Todos</a>
+            <button class="button-filter is-active">Todos</a>
         <?php
         
         $cat_args = array(
@@ -26,19 +26,28 @@
         wp_localize_script( 'projects', 'categories', $terms );
         
         foreach( $terms as $taxonomy ): ?>
-            <a class="button-filter"><?php echo $taxonomy->name; ?></a>
+            <button class="button-filter" data-segment="<?php echo $taxonomy->term_id; ?>"><?php echo $taxonomy->name; ?></a>
         <?php endforeach; ?>
         </div>
         <div class="column is-full projects">
-        <?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
-            <div class="projects-card">
+        <?php if ( have_posts() ): while ( have_posts() && $i < 6 ): the_post(); ?>
+            <div class="projects-card" data-id="<?php echo $post->ID; ?>">
                 <a href="<?php the_permalink(); ?>">
                     <figure>
-                        <img src="<?php echo the_post_thumbnail_url(); ?>" alt="<?php the_title(); ?>"/>
+                        <?php 
+                        $img_id = get_post_thumbnail_id();
+                        $feat_img_array = wp_get_attachment_image_src( $img_id, 'full' );
+                        $orient = $feat_img_array[1] > $feat_img_array[2] ? 'landscape' : 'portrait';
+                        $feat_img = wp_get_attachment_image_src( $img_id, 'project-'.$orient );
+
+                        echo $orient;
+                        ?>
+                        <img src="<?php echo $feat_img[0]; ?>" alt="<?php the_title(); ?>"/>
                     </figure>
+                    <span><?php the_title(); ?></span>
                 </a>
             </div>
-        <?php endwhile; else: endif; wp_enqueue_script( 'projects' ); ?>
+        <?php $i++; endwhile; else: endif; wp_enqueue_script( 'projects' ); ?>
         </div>
     </section>
 </div>

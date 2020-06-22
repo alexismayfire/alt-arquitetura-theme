@@ -1,0 +1,136 @@
+.projects {
+  column-count: 3;
+  column-gap: 1em;
+  row-gap: 1em;
+
+  @include mobile {
+    column-count: 1;
+    margin-bottom: 2rem;
+  }
+
+  &-title {
+    @extend .section-title;
+
+    height: 2em;
+
+    line-height: 3rem;
+
+    &::before {
+      height: 2em;
+
+      @include mobile {
+        height: 3em;
+      }
+    }
+
+    @include mobile {
+      height: 3em;
+
+      font-size: 2.5rem;
+      line-height: initial;
+    }
+  }
+
+  &-card {
+    margin-bottom: 1em;
+
+    a {
+      display: block;
+      position: relative;
+
+      line-height: 0;
+
+      figure {
+        background: $primary;
+
+        img {
+          opacity: 1;
+          transition: all 300ms ease-in-out;
+        }
+      }
+
+      span {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+
+        color: $gray;
+        font-family: 'Montserrat';
+        font-size: 1.2em;
+        opacity: 0;
+        text-align: center;
+        transition: all 300ms ease-in-out;
+      }
+    }
+
+    a:hover {
+      img {
+        opacity: 0.2;
+      }
+      span {
+        opacity: 1;
+      }
+    }
+  }
+
+  &-categories {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2em;
+
+    @include mobile {
+      bottom: 0;
+      position: fixed;
+      left: 0;
+      margin: 0 auto;
+
+      background-color: $gray;
+    }
+  }
+}
+
+.button-filter {
+  @extend .button;
+
+  position: relative;
+
+  background-color: $gray;
+  border: none;
+  font-family: 'Montserrat';
+
+  &:not(.is-active):hover {
+    background-color: $primary;
+    color: $gray;
+    transition: all 300ms ease-in-out;
+
+    &::after {
+      left: 0;
+      top: 0;
+
+      transition: all 300ms ease-in-out;
+    }
+  }
+
+  &:not(.is-active)::after {
+    content: '';
+    height: 100%;
+    left: -8px;
+    position: absolute;
+    top: 8px;
+    width: 100%;
+
+    border: 2px solid rgba($primary, 0.2);
+    transition: all 300ms ease-in-out;
+  }
+  &:focus:not(:active) {
+    box-shadow: 0 0 0 0.125em rgba($primary, 0.4);
+  }
+
+  &.is-active {
+    background-color: $primary;
+    color: $gray;
+    cursor: default;
+  }
+}

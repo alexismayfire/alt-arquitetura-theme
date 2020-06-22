@@ -7,16 +7,21 @@
     </div>
     <div class="hero-body">
         <div class="container has-text-centered">
-            <h1 class="title">
-                Olá,
-            </h1>
-            <h2 class="subtitle">
-                e aqui uma tagline bem esperta!
-            </h2>
+        <?php if ( get_field( 'home-cta_titulo' ) ): ?>
+            <h1 class="title home-cta-title"><?php the_field( 'home-cta_titulo' ); ?>
+        <?php endif; ?>
+        <?php if ( get_field( 'home-cta_tagline' ) ): ?>
+            <h2 class="subtitle home-cta-tagline"><?php the_field( 'home-cta_tagline' ); ?></h2>
+        <?php endif; ?>
+        <?php if ( get_field( 'home-cta_link' ) ): $link = get_field( 'home-cta_link' ); ?>
+            <a class="button button-cta is-dark" href="<?php echo esc_url( $link['url'] ); ?>">
+                <?php the_field( 'home-cta_link-text' ); ?> <i class="fas fa-md fa-chevron-right"></i>
+            </a>
+        <?php endif; ?>
         </div>
     </div>
 </section>
-<div class="container">
+<main class="container">
     <section class="section columns is-variable is-6 is-multiline" id="<?php the_field( 'quem-somos_id' ); ?>">
         <div class="column is-full is-two-fifths-widescreen">            
         <?php 
@@ -101,15 +106,7 @@
                         <span><? echo $segment->name; ?></span>
                     </div>
                 </div>
-        <?php elseif ( $i === 2 ): ?>
-                <div class="column is-one-quarter carousel-item">
-                    <div class="carousel-item-content" data-post-id="<?php echo $post->ID; ?>">
-                        <div class="carousel-item-title"><?php the_title(); ?></div>
-                        <span><? echo $segment->name; ?></span>
-                    </div>
-                    <a href="<?php echo get_post_type_archive_link( 'project' ); ?>" class="button is-dark">Ver Todos <i class="fas fa-md fa-chevron-right"></i></a>
-                </div>
-        <?php elseif ( $i === 1 ): ?>
+            <?php elseif ( $i === 1 ): ?>
             <div class="column is-half carousel-card">
                 <a href="<?php echo $permalink; ?>">
                     <img class="carousel-card-image" src="<?php the_post_thumbnail_url( 'project-large' ); ?>" alt="<?php the_title(); ?>" />
@@ -122,7 +119,15 @@
                     </div>
                 </a>
             </div>
-        <?php else: break; endif; $i++; ?>
+            <?php elseif ( $i === 2 ): ?>
+            <div class="column is-one-quarter carousel-item">
+                <div class="carousel-item-content" data-post-id="<?php echo $post->ID; ?>">
+                    <div class="carousel-item-title"><?php the_title(); ?></div>
+                    <span><? echo $segment->name; ?></span>
+                </div>
+                <a href="<?php echo get_post_type_archive_link( 'project' ); ?>" class="button is-dark">Ver Todos <i class="fas fa-md fa-chevron-right"></i></a>
+            </div>
+            <?php else: break; endif; $i++; ?>
         <?php endforeach; wp_reset_postdata(); endif; ?>
     </section>
     <section class="section columns is-variable is-6 is-multiline" id="<?php the_field( 'contato_id' ); ?>">
@@ -137,13 +142,13 @@
             <h2 class="section-title"><?php the_field( 'contato_titulo' ); ?></h2>
         <?php endif; ?>
         </div>
-        <div class="column is-half">
+        <div class="column is-full">
             <?php the_field('contato_conteudo'); ?>
         </div>
-        <div class="column is-one-third form-wrapper">
+        <div class="column is-full form-wrapper">
             <?php the_field('contato_shortcode'); ?>
         </div>
     </section>
-</div>
+</main>
 
 <?php get_footer(); ?>

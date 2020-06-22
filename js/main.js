@@ -1,175 +1,3 @@
-/*
-async function projectFilterListener(evt) {
-  evt.preventDefault();
-  var current = document.querySelector('.projects-filters .menu-link.active');
-  current.classList.remove('active');
-  current.addEventListener('click', projectFilterListener);
-  evt.target.classList.add('active');
-  var cat = evt.target.dataset.filterCategory;
-  var postData = 'action=myfilter&page=1&replace=1';
-  if (cat) {
-    postData += '&cat=' + cat;
-  }
-  await showProjects(postData, true);
-  projectIndicatorElements();
-}
-
-async function projectIndicatorListener(evt) {
-  evt.preventDefault();
-  var current = document.querySelector('.indicator-item.active');
-  current.classList.remove('active');
-  current.addEventListener('click', projectIndicatorListener);
-  evt.currentTarget.classList.add('active');
-  var page = evt.currentTarget.dataset.page;
-  var postData = 'action=myfilter&page=' + page;
-  var category = document.querySelector('.projects-filters .menu-link.active')
-    .dataset.filterCategory;
-  if (category) {
-    postData += '&cat=' + category;
-  }
-  await showProjects(postData);
-}
-
-function createProjectCarousel(wrapper, carousel, data, replace, loadTimeout) {
-  if (replace) {
-    carousel.parentElement.remove();
-    var node = document.createElement('div');
-    node.innerHTML = data;
-    wrapper.appendChild(node);
-    setTimeout(function () {
-      var el = document.querySelector('.project-carousel');
-      console.log(el);
-      el.classList.remove('fade');
-    }, 300);
-  } else {
-    carousel.innerHTML = data;
-    carousel.classList.remove('fade');
-  }
-
-  projectFilterElements();
-  projectIndicatorElements();
-}
-
-async function showProjects(postData, replace = false) {
-  var wrapper = document.querySelector('.projects');
-  var carousel = document.querySelector('.project-carousel');
-  var carouselHeight = carousel.clientHeight;
-  var currentData = carousel.innerHTML;
-  var complete = false;
-  var loadTimeout = false;
-  var data = null;
-
-  setTimeout(function () {
-    if (!complete) {
-      carousel.innerHTML =
-        '<div style="height: ' + carouselHeight + 'px">Loading...</div>';
-      loadTimeout = true;
-    } else {
-      createProjectCarousel(wrapper, carousel, data, replace);
-    }
-  }, 600);
-  carousel.classList.add('fade');
-
-  await fetch(ajax.url, {
-    method: 'POST',
-    body: new URLSearchParams(postData),
-  }).then(async function (response) {
-    complete = true;
-    data = await response.text();
-    if (loadTimeout) {
-      createProjectCarousel(wrapper, carousel, data, replace, loadTimeout);
-    }
-  });
-}
-
-function projectFilterElements() {
-  document
-    .querySelectorAll('a[data-filter-category]:not(.active)')
-    .forEach(function (elem) {
-      elem.addEventListener('click', projectFilterListener);
-    });
-}
-
-function projectIndicatorElements() {
-  document
-    .querySelectorAll('.indicator-item:not(.active)')
-    .forEach(function (elem) {
-      elem.addEventListener('click', projectIndicatorListener);
-    });
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  var elems = document.querySelectorAll('.sidenav');
-  var instances = M.Sidenav.init(elems);
-
-  elems = document.querySelectorAll('.scrollspy');
-  instances = M.ScrollSpy.init(elems, { scrollOffset: 64 });
-
-  document
-    .querySelectorAll('.menu-item-object-custom')
-    .forEach(function (elem) {
-      var link = elem.firstChild.getAttribute('href');
-      if (link.startsWith('#')) {
-        elem.firstChild.setAttribute('href', '/' + link);
-      }
-    });
-
-  */
-
-/*
-  elems = document.querySelectorAll('.carousel');
-  instances = M.Carousel.init(elems, {
-    indicators: true,
-    numVisible: 1,
-    dist: 0,
-    fullWidth: true,
-    noWrap: true,
-  });
-  */
-/*
-});
-
-projectFilterElements();
-projectIndicatorElements();
-
-function headerDecoration() {
-  setTimeout(function () {
-    document
-      .querySelectorAll('.section-header-decoration-left')
-      .forEach(function (elem) {
-        var width = elem.previousElementSibling.querySelector('.header-text')
-          .clientWidth;
-        elem.querySelector('line').setAttribute('x2', width);
-      });
-  }, 0);
-}
-
-headerDecoration();
-*/
-
-/*
-document.addEventListener('DOMContentLoaded', function () {
-  var elems = document.querySelectorAll('.carousel-card-image.is-hidden');
-  elems.forEach((elem) => {
-    console.log(elem.parentElement);
-    elem.parentElement.addEventListener('click', function (evt) {
-      evt.preventDefault();
-      var selected = evt.currentTarget.parentElement;
-      selected.classList.remove('is-one-quarter');
-      selected.classList.remove('carousel-item');
-      var current = document.querySelector('.carousel-card');
-      current.classList.remove(['carousel-card', 'is-half']);
-      current.classList.add('carousel-item', 'is-one-quarter');
-      current.querySelector('img').classList.add('is-hidden');
-      selected.classList.add('is-half');
-      selected.classList.add('carousel-card');
-      elem.classList.remove('is-hidden');
-      console.log(evt.currentTarget.parentElement);
-    });
-  });
-});
-*/
-
 async function restRequest(endpoint, callback) {
   const req = await fetch(`${restApi.url}${endpoint}`);
   return await req.json().then((res) => callback(res));
@@ -177,7 +5,16 @@ async function restRequest(endpoint, callback) {
 
 function isInViewport(elem) {
   const bounding = elem.getBoundingClientRect();
-  return bounding.top + bounding.height > 120;
+  const hero = document.querySelector('.hero.is-fullheight');
+  if (hero) {
+    return hero.getBoundingClientRect().height > window.scrollY;
+  }
+
+  if (elem.classList.contains('is-fixed-top')) {
+    return bounding.height + 16 > window.scrollY;
+  }
+
+  return bounding.top + bounding.height > 0;
 }
 
 function getFeaturedImage(post) {
@@ -195,29 +32,62 @@ async function carouselItemListener(evt) {
   const postId = evt.target.dataset.postId;
 
   const card = document.querySelector('.carousel-card');
+  const cardContent = document.querySelector('.carousel-card-content');
   const titleTag = card.querySelector('.carousel-card-title');
   const segmentTag = card.querySelector('span');
   const imageTag = card.querySelector('.carousel-card-image');
   const linkTags = card.querySelectorAll('a');
 
   const proj = window.projects[postId];
+  cardContent.classList.add('fade-out');
+  imageTag.parentElement.classList.add('fade-out');
+
+  setTimeout(function () {
+    imageTag.setAttribute('src', proj.image);
+    cardContent.classList.add('fade-in');
+    cardContent.classList.remove('fade-out');
+    imageTag.parentElement.classList.add('fade-in');
+    imageTag.parentElement.classList.remove('fade-out');
+  }, 300);
   titleTag.innerHTML = proj.title;
   segmentTag.innerHTML = proj.segment;
-  imageTag.setAttribute('src', proj.image);
+
   linkTags.forEach((link) => link.setAttribute('href', proj.slug));
 
-  const buttons = document.querySelector('carousel-item');
+  const prev = window.projects[proj.prev];
+  const next = window.projects[proj.next];
+  const [buttonPrev, buttonNext] = document.querySelectorAll(
+    '.carousel-item-content',
+  );
+  buttonPrev.dataset.postId = proj.prev;
+  buttonPrev.classList.add('fade-out');
+  setTimeout(function () {
+    buttonPrev.querySelector('.carousel-item-title').innerHTML = prev.title;
+    buttonPrev.querySelector('span').innerHTML = prev.segment;
+    buttonPrev.classList.add('fade-in');
+    buttonPrev.classList.remove('fade-out');
+  }, 300);
+
+  buttonNext.dataset.postId = proj.next;
+  buttonNext.classList.add('fade-out');
+  setTimeout(function () {
+    buttonNext.querySelector('.carousel-item-title').innerHTML = next.title;
+    buttonNext.querySelector('span').innerHTML = next.segment;
+    buttonNext.classList.add('fade-in');
+    buttonNext.classList.remove('fade-out');
+  }, 300);
 }
 
 function mapFeaturedProjectsIds(res) {
-  return res.acf['projetos_itens'].reduce(
-    (acc, current) => (acc += `${current.ID},`),
-    '',
-  );
+  return res.acf['projetos_itens']
+    .reduce((acc, current) => (acc += `${current.ID},`), '')
+    .slice(0, -1);
 }
 
 function mapFeaturedProjects(res) {
-  return res.reduce(
+  // TODO: precisa reordenar com os dados da consulta original
+  // A API retorna por ordem descendente de ID!
+  const projects = res.reduce(
     (acc, item) => ({
       ...acc,
       [item.id]: {
@@ -229,13 +99,31 @@ function mapFeaturedProjects(res) {
     }),
     {},
   );
+
+  window.projectsIds.forEach((key, index, arr) => {
+    if (index === 0) {
+      projects[key]['prev'] = arr[arr.length - 1];
+      projects[key]['next'] = arr[index + 1];
+    } else if (index === arr.length - 1) {
+      projects[key]['prev'] = arr[index - 1];
+      projects[key]['next'] = arr[0];
+    } else {
+      projects[key]['prev'] = arr[index - 1];
+      projects[key]['next'] = arr[index + 1];
+    }
+  });
+
+  return projects;
 }
 
 async function getFeaturedProjects() {
+  // TODO: make a dynamic query for home page
   let endpoint = 'acf/v3/pages/9';
-  const projectsIds = await restRequest(endpoint, mapFeaturedProjectsIds);
+  const projectsIdsQuery = await restRequest(endpoint, mapFeaturedProjectsIds);
 
-  endpoint = `wp/v2/project?_embed&include=${projectsIds}`;
+  window.projectsIds = projectsIdsQuery.split(',');
+
+  endpoint = `wp/v2/project?_embed&include=${projectsIdsQuery}`;
   window.projects = await restRequest(endpoint, mapFeaturedProjects);
 }
 
@@ -247,25 +135,49 @@ async function carouselInit() {
   items.forEach((item) => item.addEventListener('click', carouselItemListener));
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  carouselInit();
-
+function menuInit() {
   const menuHamb = document.querySelector('[data-target=navbarMenuHeroC]');
   menuHamb.addEventListener('click', function (evt) {
     document.querySelector('#navbarMenuHeroC').classList.toggle('is-active');
   });
+
+  if (window.location.pathname === '/') {
+    document.querySelectorAll('a[href^="/#"]').forEach((anchor) => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const href = this.getAttribute('href').split('/')[1];
+        document.querySelector(href).scrollIntoView({
+          behavior: 'smooth',
+        });
+      });
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  carouselInit();
+  menuInit();
 });
 
-document.addEventListener('scroll', function (evt) {
-  const elem = document.querySelector('.hero.is-fullheight');
+function scrollInit(evt) {
+  const elem = document.querySelector('.navbar');
+  const elemHeight = elem.getBoundingClientRect().height;
+  const home = window.location.pathname === '/';
+  const hero = document.querySelector('.hero.is-fullheight');
+  const container = document.querySelector('header ~ div');
   if (elem) {
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-      if (isInViewport(elem)) {
-        navbar.classList.remove('nav-background', 'is-fixed-top');
-      } else {
-        navbar.classList.add('nav-background', 'is-fixed-top');
+    if (isInViewport(elem)) {
+      if (!home) {
+        container.style.marginTop = 0;
       }
+      elem.classList.remove('nav-background', 'is-fixed-top');
+    } else {
+      if (!home) {
+        container.style.marginTop = `${elemHeight}px`;
+      }
+      elem.classList.add('nav-background', 'is-fixed-top');
     }
   }
-});
+}
+
+document.addEventListener('scroll', scrollInit);

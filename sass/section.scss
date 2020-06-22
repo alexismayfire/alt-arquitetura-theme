@@ -1,0 +1,47 @@
+.section {
+  &-title {
+    height: 2.75em;
+    margin-bottom: 2rem;
+    position: relative;
+    width: fit-content;
+
+    background-color: $gray;
+    font-size: 4rem;
+    font-weight: 600;
+    line-height: 2.75rem;
+    padding: 2rem 2rem 2rem 0;
+    text-transform: lowercase;
+
+    @include mobile {
+      height: 3em;
+      font-size: 2.5rem;
+    }
+
+    &-prepend {
+      display: block;
+
+      font-size: 2.5rem;
+      line-height: 125%;
+
+      @include mobile {
+        font-size: 1.5rem;
+        line-height: 100%;
+      }
+    }
+  }
+
+  &-title::before {
+    content: '';
+    height: 2.75em;
+    position: absolute;
+    left: -50vw;
+    top: 0;
+    width: 50vw;
+
+    background-color: $gray;
+
+    @include mobile {
+      height: 3em;
+    }
+  }
+}

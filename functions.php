@@ -50,8 +50,24 @@ add_image_size( 'team', 160, 235, true );
 add_image_size( 'blog-large', 800, 400, true );
 add_image_size( 'blog-small', 300, 200, true );
 add_image_size( 'project-gallery', 1500, 600, true );
+add_image_size( 'project-landscape', 700, 500, false );
+add_image_size( 'project-portrait', 500, 700, false );
 add_image_size( 'project-large', 430, 330, true );
 add_image_size( 'project-small', 300, 150, true );
+
+function my_custom_sizes( $sizes ) {
+    return array_merge( $sizes, array(
+        'project-large' => __( 'Projeto Home' ),
+    ) );
+}
+// add_filter( 'image_size_names_choose', 'my_custom_sizes' );
+
+function filter_site_upload_size_limit( $size ) {
+    return 5 * 1024 * 1024;
+}
+add_filter( 'upload_size_limit', 'filter_site_upload_size_limit', 20 );
+
+@ini_set( 'upload_max_size' , '5M' );
 
 // Sidebars
 function custom_sidebars() {
@@ -113,6 +129,7 @@ function projects_post_type() {
         'show_in_rest' => true,
         'menu_icon' => 'dashicons-building',
         'show_ui' => true,
+        'show_in_rest' => true,
         'publicly_queryable' => true,
     );
     register_post_type( 'project', $args );
@@ -133,133 +150,6 @@ function projects_taxonomy() {
 }
 add_action( 'init', 'projects_taxonomy' );
 
-// Shortcodes
-function projects_query_args() {
-    return array(
-        'post_type' => 'project',
-        'post_status' => 'publish',
-        'posts_per_page' => 3,
-        'orderby' => 'post_date',
-        'order' => 'DESC',
-        'paged' => 1,
-    );
-}
-
-function projects_carousel_shortcode( $atts, $content = null ) {
-	/*
-	extract(shortcode_atts(array(
-		'cat'     => '',
-		'num'     => '3',
-		'order'   => 'DESC',
-        'orderby' => 'post_date',
-	), $atts));    
-    */
-    $args = projects_query_args();
-    $loop = new WP_Query( $args );
-    set_query_var( 'loop', $loop ); 
-    
-    ob_start();
-    echo '<div>';
-    echo '<div class="project-carousel">';
-    get_template_part( 'includes/projects', 'carousel' );
-    echo '</div>';
-    get_template_part( 'includes/projects', 'carouselnav' );
-    echo '</div>';
-    wp_reset_postdata();
-
-    return ob_get_clean();
-}
-add_shortcode('projects_carousel', 'projects_carousel_shortcode');
-
-function projects_filters_shortcode($atts, $content = null) {
-    $args = array(
-        'taxonomy' => 'segments',
-        'orderby' => 'name',
-        'order'   => 'ASC'
-    );
-
-    $cats = get_categories($args);
-    set_query_var( 'cats', $cats );
-    ob_start();
-    
-    get_template_part( 'includes/projects', 'filters' );
-
-    return ob_get_clean();
-}
-add_shortcode('projects_filters', 'projects_filters_shortcode');
-
-add_action('wp_ajax_myfilter', 'misha_filter_function'); // wp_ajax_{ACTION HERE} 
-add_action('wp_ajax_nopriv_myfilter', 'misha_filter_function');
- 
-function misha_filter_function() {
-
-    $args = projects_query_args();
-
-	if( isset( $_POST['cat'] ) )
-		$args['tax_query'] = array(
-			array(
-				'taxonomy' => 'segments',
-				'field' => 'id',
-				'terms' => $_POST['cat']
-			)
-        );
-
-    if( isset( $_POST['page'] ) )
-        $args['paged'] = $_POST['page'];
-    
-    $loop = new WP_Query( $args );
-    set_query_var( 'loop', $loop ); 
-    set_query_var( 'cat', $_POST['cat']);
-
-    if ( isset( $_POST['replace'] ) ) {
-        echo '<div class="project-carousel fade">';
-        get_template_part( 'includes/projects', 'carousel' );
-        echo '</div>';
-        get_template_part( 'includes/projects', 'carouselnav' );
-    } else {
-        get_template_part( 'includes/projects', 'carousel' );
-    }
-    die();
-}
-
-// filter for Frontend output.
-add_filter( 'lazyblock/project-gallery/frontend_callback', 'project_gallery_block_output', 10, 2 );
-
-// filter for Editor output.
-add_filter( 'lazyblock/project-gallery/editor_callback', 'project_gallery_block_output', 10, 2 );
-
-if ( ! function_exists( 'project_gallery_block_output' ) ) {
-    /**
-     * Test Render Callback
-     *
-     * @param string $output - block output.
-     * @param array  $attributes - block attributes.
-     */
-    function project_gallery_block_output( $output, $attributes ) {
-        ob_start();
-        // foreach($attributes['images'] as $photo) {
-        $photo = array_pop( $attributes['images'] ); ?>
-        <div class="gallery">
-            <div class="gallery-control gallery-control-left">
-                <i class="material-icons md-48">keyboard_arrow_left</i>
-            </div>
-            <div class="gallery-control gallery-control-right">
-                <i class="material-icons md-48">keyboard_arrow_right</i>
-            </div>
-            <div class="gallery-wrapper">
-                <img src="<?php echo $photo["image"]["url"]; ?>" alt="<?php echo $photo["alt-text"]; ?>" />
-                <div class="caption-wrapper bg-primary">
-                    <h3 class="card-title"><?php the_title(); ?></h3>
-                    <p><?php echo $photo["caption"]; ?></p>
-                </div>
-            </div>
-        </div>
-        <?php
-
-        return ob_get_clean();
-    }
-}
-
 // Filters
 add_filter( 'the_content', 'filter_project_content', 1 );
  
@@ -274,5 +164,37 @@ function filter_project_content( $content ) {
 
 // Plugins
 add_filter('wpcf7_autop_or_not', '__return_false');
+
+// REST API
+function get_image_src( $object, $field_name, $request ) {
+    /*
+    $feat_img_array = wp_get_attachment_image_src(
+        $object['featured_media'], // Image attachment ID
+        'project-gallery',  // Size.  Ex. "thumbnail", "large", "full", etc..
+        true // Whether the image should be treated as an icon.
+    );
+    */
+    $id = $object['featured_media'];
+    $feat_img_array = wp_get_attachment_image_src( $id, 'full' );
+    $orient = $feat_img_array[1] > $feat_img_array[2] ? 'landscape' : 'portrait';
+    $feat_img = wp_get_attachment_image_src( $id, 'project-'.$orient );
+
+    return $feat_img[0];
+}
+
+function add_thumbnail_to_JSON() {
+    //Add featured image
+    register_rest_field( 
+        'project', // Where to add the field (Here, blog posts. Could be an array)
+        'featured_image_src', // Name of new field (You can call this anything)
+        array(
+            'get_callback'    => 'get_image_src',
+            'update_callback' => null,
+            'schema'          => null,
+        )
+    );
+}
+
+add_action( 'rest_api_init', 'add_thumbnail_to_JSON' );
 
 ?>
