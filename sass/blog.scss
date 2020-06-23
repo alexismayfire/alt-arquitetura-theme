@@ -1,0 +1,128 @@
+@import '../node_modules/bulma/sass/utilities/_all.sass';
+
+$primary: #323232;
+$gray: #f2f2f2;
+$height: 35%;
+
+.blog {
+  display: flex;
+  flex-flow: row wrap;
+
+  @include mobile {
+    display: block;
+    column-count: 1;
+  }
+
+  &-card {
+    display: grid;
+    flex: 1 1 40%;
+    flex-flow: column wrap;
+    grid-template-rows: 1fr 1.2fr;
+    position: relative;
+    margin-bottom: 2em;
+
+    @include desktop {
+      &:nth-of-type(odd) {
+        margin-right: 2em;
+      }
+    }
+
+    a {
+      display: flex;
+      flex-direction: column;
+
+      color: $primary;
+    }
+
+    &-image {
+      height: 100%;
+      margin: 0 auto;
+      width: 100%;
+      z-index: 10;
+    }
+
+    &-content {
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: flex-start;
+      align-items: flex-start;
+
+      background-color: $gray;
+      font-size: 1em;
+      line-height: 2em;
+      padding: 1em;
+      transition: all 300ms ease-in-out;
+
+      p {
+        font-size: 0.8em;
+        line-height: 150%;
+      }
+
+      a {
+        align-self: flex-end;
+      }
+    }
+
+    &-title {
+      width: 100%;
+
+      font-size: 1.75rem;
+      font-weight: 600;
+    }
+  }
+}
+
+.widget_search,
+.widget_categories {
+  list-style-type: none;
+  margin-bottom: 2em;
+}
+
+.widget_search {
+  list-style-type: none;
+
+  label {
+    font-size: 0.8em;
+  }
+
+  .form-control {
+    display: flex;
+    height: 2em;
+
+    .input {
+      box-sizing: border-box;
+      height: 100%;
+
+      padding: 0.5em;
+    }
+
+    .button {
+      height: 100%;
+    }
+
+    &:hover,
+    &:focus,
+    &:focus-within,
+    &:active {
+      cursor: text;
+    }
+  }
+}
+
+.widget_categories {
+  h4 {
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+  }
+
+  .cat-item a {
+    color: $primary;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .cat-item.current-cat {
+    font-weight: 600;
+  }
+}
