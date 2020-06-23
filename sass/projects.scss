@@ -11,21 +11,15 @@
   &-title {
     @extend .section-title;
 
-    height: 2em;
+    height: fit-content;
 
     line-height: 3rem;
 
     &::before {
-      height: 2em;
-
-      @include mobile {
-        height: 3em;
-      }
+      height: -webkit-fill-available;
     }
 
     @include mobile {
-      height: 3em;
-
       font-size: 2.5rem;
       line-height: initial;
     }
