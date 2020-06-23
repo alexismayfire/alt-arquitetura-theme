@@ -60,7 +60,7 @@ function my_custom_sizes( $sizes ) {
         'project-large' => __( 'Projeto Home' ),
     ) );
 }
-// add_filter( 'image_size_names_choose', 'my_custom_sizes' );
+add_filter( 'image_size_names_choose', 'my_custom_sizes' );
 
 function filter_site_upload_size_limit( $size ) {
     return 5 * 1024 * 1024;
@@ -87,7 +87,6 @@ function team_post_type() {
             'name' => 'Equipe',
             'singular_name' => 'Colaborador',
         ),
-        'public' => false,
         'supports' => array('title', 'editor', 'thumbnail'),
         'menu_icon' => 'dashicons-networking',
         'show_ui' => true,
@@ -102,7 +101,6 @@ function services_post_type() {
             'name' => 'Serviços',
             'singular_name' => 'Serviço',
         ),
-        'public' => false,
         'supports' => array('title', 'editor', 'custom-fields'),
         'menu_icon' => 'dashicons-screenoptions',
         'show_ui' => true,
@@ -119,18 +117,16 @@ function projects_post_type() {
             'add_new' => 'Novo projeto',
             'add_new_item' => 'Adicionar Novo Projeto',
         ),
-        'public' => true,
+        'public' => true, 
         'rewrite' => array(
             'slug' => 'projetos',
-            'with_front' => false,
+            'with_front' => true,
         ),
-        'has_archive' => 'projetos',
         'supports' => array('title', 'editor', 'thumbnail', 'custom-fields'),
         'show_in_rest' => true,
         'menu_icon' => 'dashicons-building',
         'show_ui' => true,
         'show_in_rest' => true,
-        'publicly_queryable' => true,
     );
     register_post_type( 'project', $args );
 }
@@ -150,9 +146,7 @@ function projects_taxonomy() {
 }
 add_action( 'init', 'projects_taxonomy' );
 
-// Filters
-add_filter( 'the_content', 'filter_project_content', 1 );
- 
+// Filters 
 function filter_project_content( $content ) {
     // Check if we're inside the main loop in a single Project.
     if ( is_singular( 'project' ) && in_the_loop() && is_main_query() ) {
@@ -161,19 +155,22 @@ function filter_project_content( $content ) {
  
     return $content;
 }
+// add_filter( 'the_content', 'filter_project_content', 1 );
+
+function project_disable_gutenberg($is_enabled, $post_type) {
+	
+	if ($post_type === 'project') return false;
+	
+	return $is_enabled;
+	
+}
+// add_filter('use_block_editor_for_post_type', 'project_disable_gutenberg', 10, 2);
 
 // Plugins
 add_filter('wpcf7_autop_or_not', '__return_false');
 
 // REST API
 function get_image_src( $object, $field_name, $request ) {
-    /*
-    $feat_img_array = wp_get_attachment_image_src(
-        $object['featured_media'], // Image attachment ID
-        'project-gallery',  // Size.  Ex. "thumbnail", "large", "full", etc..
-        true // Whether the image should be treated as an icon.
-    );
-    */
     $id = $object['featured_media'];
     $feat_img_array = wp_get_attachment_image_src( $id, 'full' );
     $orient = $feat_img_array[1] > $feat_img_array[2] ? 'landscape' : 'portrait';
@@ -183,10 +180,9 @@ function get_image_src( $object, $field_name, $request ) {
 }
 
 function add_thumbnail_to_JSON() {
-    //Add featured image
     register_rest_field( 
-        'project', // Where to add the field (Here, blog posts. Could be an array)
-        'featured_image_src', // Name of new field (You can call this anything)
+        'project', // post type
+        'featured_image_src', // field name
         array(
             'get_callback'    => 'get_image_src',
             'update_callback' => null,

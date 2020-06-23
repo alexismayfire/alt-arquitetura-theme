@@ -1,12 +1,16 @@
-<?php get_header(); ?>
+<?php
+/**
+* Template Name: Projetos
+*/
+
+get_header(); 
+
+?>
 
 <div class="container">
     <section class="section columns is-variable is-6 is-multiline">
         <div class="column is-half">
-            <h1 class="projects-title"><?php 
-                $post_type = get_post_type_object( get_post_type( get_the_ID() ) );
-                echo $post_type->label;
-            ?></h1>
+            <h1 class="projects-title"><?php echo the_title() ?></h1>
         </div>
         <div class="column is-half projects-categories">
             <span>Filtrar por:</span>
@@ -30,7 +34,13 @@
         <?php endforeach; ?>
         </div>
         <div class="column is-full projects">
-        <?php if ( have_posts() ): while ( have_posts() && $i < 6 ): the_post(); ?>
+        <?php 
+        $args = array(
+            'post_type' => 'project'
+        );
+        $the_query = new WP_Query( $args );
+        ?>
+        <?php if ( $the_query->have_posts() ): while ( $the_query->have_posts() && $i < 6 ): $the_query->the_post(); ?>
             <div class="projects-card" data-id="<?php echo $post->ID; ?>">
                 <a href="<?php the_permalink(); ?>">
                     <figure>
