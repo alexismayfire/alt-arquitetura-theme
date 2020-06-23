@@ -48,7 +48,8 @@
       font-family: 'Apertura';
       font-size: 14px;
       font-weight: bold;
-      text-transform: uppercase;
+      letter-spacing: 4px;
+      text-transform: lowercase;
     }
   }
 
@@ -93,24 +94,5 @@
     .navbar-items-container:not(.navbar-social-container) {
       display: grid;
     }
-  }
-}
-
-/** 
-WP overrides 
-TODO: highlight current menu item
-**/
-.current-menu-item:not(.menu-item-object-custom) {
-  position: relative;
-
-  &::before {
-    content: '';
-    height: 1em;
-    left: -0.5em;
-    position: absolute;
-    top: calc(1em - 50%);
-    width: 2px;
-
-    background-color: $primary;
   }
 }

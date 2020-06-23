@@ -8,6 +8,21 @@
     url('../fonts/Apertura-Bold.otf') format('opentype');
 }
 
+@font-face {
+  font-family: 'Apertura Black';
+  src: url('../fonts/Apertura-Black.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Apertura Medium';
+  src: url('../fonts/Apertura-Medium.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Apertura Bold';
+  src: url('../fonts/Apertura-Bold.otf') format('opentype');
+}
+
 #home {
   background-image: url('/images/bg-4.jpg');
   background-repeat: no-repeat;
@@ -44,6 +59,10 @@ body {
 
 p {
   margin-bottom: 16px;
+}
+
+main.container {
+  margin-top: 1rem;
 }
 
 .input,

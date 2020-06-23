@@ -2,6 +2,18 @@
   font-family: 'Apertura';
   src: url("../fonts/Apertura-Regular.ttf") format("truetype"), url("../fonts/Apertura-Black.otf") format("opentype"), url("../fonts/Apertura-Medium.otf") format("opentype"), url("../fonts/Apertura-Bold.otf") format("opentype"); }
 
+@font-face {
+  font-family: 'Apertura Black';
+  src: url("../fonts/Apertura-Black.otf") format("opentype"); }
+
+@font-face {
+  font-family: 'Apertura Medium';
+  src: url("../fonts/Apertura-Medium.otf") format("opentype"); }
+
+@font-face {
+  font-family: 'Apertura Bold';
+  src: url("../fonts/Apertura-Bold.otf") format("opentype"); }
+
 #home {
   background-image: url("/images/bg-4.jpg");
   background-repeat: no-repeat;
@@ -7570,7 +7582,8 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
       font-family: 'Apertura';
       font-size: 14px;
       font-weight: bold;
-      text-transform: uppercase; }
+      letter-spacing: 4px;
+      text-transform: lowercase; }
   .navbar-items-container .menu-item-icon {
     margin: 0 0.5em; }
 
@@ -7599,21 +7612,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
     height: calc(100vh - 120px); }
     .navbar-menu.is-active .navbar-items-container:not(.navbar-social-container) {
       display: grid; } }
-
-/** 
-WP overrides 
-TODO: highlight current menu item
-**/
-.current-menu-item:not(.menu-item-object-custom) {
-  position: relative; }
-  .current-menu-item:not(.menu-item-object-custom)::before {
-    content: '';
-    height: 1em;
-    left: -0.5em;
-    position: absolute;
-    top: calc(1em - 50%);
-    width: 2px;
-    background-color: #323232; }
 
 .section-title, .projects-title {
   height: 2.75em;
@@ -10826,6 +10824,9 @@ body {
 
 p {
   margin-bottom: 16px; }
+
+main.container {
+  margin-top: 1rem; }
 
 .input,
 .textarea {
