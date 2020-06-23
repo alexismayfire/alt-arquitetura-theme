@@ -1,51 +1,76 @@
 .project {
-  &-title {
-    @extend .title;
-    z-index: 20;
+  &-detail {
+    display: flex;
+    flex-wrap: wrap;
 
-    color: $gray;
+    @include desktop {
+      justify-content: space-evenly;
+
+      text-align: center;
+    }
+
+    li {
+      margin-bottom: 0.5em;
+      @include mobile {
+        width: 100%;
+      }
+
+      strong {
+        display: block;
+      }
+    }
   }
+}
 
-  &-hero {
-    &-carousel {
-      height: 100vh;
-      position: fixed;
-      width: 100vw;
-      z-index: 10;
-    }
+.blocks-gallery-grid,
+.wp-block-gallery {
+  .blocks-gallery-item {
+    max-height: calc(100vh - 120px);
 
-    &-header,
-    &-content {
-      position: relative;
-      z-index: 20;
-    }
+    figcaption {
+      bottom: 2em;
+      left: 25%;
+      overflow: initial;
+      max-width: 50%;
 
-    &-header {
-      .hero-body {
-        justify-content: space-between;
+      background: none;
+      background-color: $gray;
+      color: $primary;
+      font-size: 0.8em;
+      line-height: 150%;
+      opacity: 0;
+      padding: 1em;
+      text-align: left;
+      transition: all 300ms ease-in-out;
 
-        color: $gray;
-      }
+      &::after {
+        content: '';
+        height: 100%;
+        left: -8px;
+        position: absolute;
+        top: 8px;
+        width: 100%;
 
-      .previous,
-      .next {
-        cursor: pointer;
-
-        &:hover {
-          color: darken($gray, 20%);
-          transition: all 300ms ease-in-out;
-        }
-      }
-
-      .hero-footer {
-        align-items: center;
-        display: flex;
-        min-height: 6em;
+        border: 2px solid rgba($primary, 0.2);
+        transition: all 300ms ease-in-out;
       }
     }
 
-    &-content {
-      background-color: #fafafa;
+    img {
+      filter: none;
+      transition: all 300ms ease-in-out;
+    }
+
+    &:hover {
+      figcaption {
+        opacity: 1;
+        transition: all 300ms ease-in-out;
+      }
+
+      img {
+        filter: brightness(0.6);
+        transition: all 300ms ease-in-out;
+      }
     }
   }
 }
