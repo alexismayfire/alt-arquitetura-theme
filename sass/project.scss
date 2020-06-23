@@ -1,18 +1,38 @@
 .project {
+  &-title {
+    @extend .section-title;
+
+    font-size: 2.5rem;
+    line-height: 125%;
+
+    @include mobile {
+      font-size: 1.5rem;
+      line-height: 100%;
+    }
+  }
+
   &-detail {
-    display: flex;
-    flex-wrap: wrap;
+    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
 
     @include desktop {
-      justify-content: space-evenly;
-
       text-align: center;
     }
 
     li {
+      align-items: baseline;
+      display: flex;
       margin-bottom: 0.5em;
-      @include mobile {
-        width: 100%;
+      justify-content: space-between;
+
+      line-height: 2em;
+
+      @include desktop {
+        align-items: center;
+        flex-direction: column;
+
+        line-height: initial;
       }
 
       strong {
@@ -26,49 +46,40 @@
 .wp-block-gallery {
   .blocks-gallery-item {
     max-height: calc(100vh - 120px);
+    margin-bottom: 4em;
 
     figcaption {
-      bottom: 2em;
-      left: 25%;
-      overflow: initial;
-      max-width: 50%;
+      align-items: flex-end;
+      bottom: 0;
+      display: flex;
+      left: 0;
+      min-height: 50%;
 
-      background: none;
-      background-color: $gray;
-      color: $primary;
+      color: $gray;
       font-size: 0.8em;
       line-height: 150%;
       opacity: 0;
-      padding: 1em;
+      padding: 2em;
       text-align: left;
       transition: all 300ms ease-in-out;
 
-      &::after {
-        content: '';
-        height: 100%;
-        left: -8px;
-        position: absolute;
-        top: 8px;
-        width: 100%;
+      @include mobile {
+        display: block;
+        overflow: scroll;
 
-        border: 2px solid rgba($primary, 0.2);
-        transition: all 300ms ease-in-out;
+        background: linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.7),
+          rgba(0, 0, 0, 0.7) 100%,
+          transparent
+        );
+        padding: 1em;
       }
-    }
-
-    img {
-      filter: none;
-      transition: all 300ms ease-in-out;
     }
 
     &:hover {
       figcaption {
         opacity: 1;
-        transition: all 300ms ease-in-out;
-      }
-
-      img {
-        filter: brightness(0.6);
         transition: all 300ms ease-in-out;
       }
     }
