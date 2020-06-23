@@ -7,6 +7,8 @@
   &-menu {
     align-items: center;
     justify-content: center;
+
+    padding-top: 1.2em;
   }
 }
 
@@ -99,5 +101,16 @@ WP overrides
 TODO: highlight current menu item
 **/
 .current-menu-item:not(.menu-item-object-custom) {
-  text-decoration: underline;
+  position: relative;
+
+  &::before {
+    content: '';
+    height: 1em;
+    left: -0.5em;
+    position: absolute;
+    top: calc(1em - 50%);
+    width: 2px;
+
+    background-color: $primary;
+  }
 }
