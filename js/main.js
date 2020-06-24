@@ -39,18 +39,20 @@ async function carouselItemListener(evt) {
   const linkTags = card.querySelectorAll('a');
 
   const proj = window.projects[postId];
-  cardContent.classList.add('fade-out');
-  imageTag.parentElement.classList.add('fade-out');
+  cardContent.parentElement.classList.remove('fade-in', 'scale-in');
+  cardContent.parentElement.classList.add('fade-out', 'scale-out');
+  imageTag.parentElement.classList.remove('fade-in', 'scale-in');
+  imageTag.parentElement.classList.add('fade-out', 'scale-out');
 
   setTimeout(function () {
     imageTag.setAttribute('src', proj.image);
-    cardContent.classList.add('fade-in');
-    cardContent.classList.remove('fade-out');
-    imageTag.parentElement.classList.add('fade-in');
-    imageTag.parentElement.classList.remove('fade-out');
+    titleTag.innerHTML = proj.title;
+    segmentTag.innerHTML = proj.segment;
+    cardContent.parentElement.classList.add('fade-in', 'scale-in');
+    cardContent.parentElement.classList.remove('fade-out', 'scale-out');
+    imageTag.parentElement.classList.add('fade-in', 'scale-in');
+    imageTag.parentElement.classList.remove('fade-out', 'scale-out');
   }, 300);
-  titleTag.innerHTML = proj.title;
-  segmentTag.innerHTML = proj.segment;
 
   linkTags.forEach((link) => link.setAttribute('href', proj.slug));
 
@@ -60,21 +62,23 @@ async function carouselItemListener(evt) {
     '.carousel-item-content',
   );
   buttonPrev.dataset.postId = proj.prev;
-  buttonPrev.classList.add('fade-out');
+  buttonPrev.classList.remove('fade-in', 'slide-in');
+  buttonPrev.classList.add('fade-out', 'slide-out-left');
   setTimeout(function () {
     buttonPrev.querySelector('.carousel-item-title').innerHTML = prev.title;
     buttonPrev.querySelector('span').innerHTML = prev.segment;
-    buttonPrev.classList.add('fade-in');
-    buttonPrev.classList.remove('fade-out');
+    buttonPrev.classList.add('fade-in', 'slide-in');
+    buttonPrev.classList.remove('fade-out', 'slide-out-left');
   }, 300);
 
   buttonNext.dataset.postId = proj.next;
-  buttonNext.classList.add('fade-out');
+  buttonNext.classList.remove('fade-in', 'slide-in');
+  buttonNext.classList.add('fade-out', 'slide-out-right');
   setTimeout(function () {
     buttonNext.querySelector('.carousel-item-title').innerHTML = next.title;
     buttonNext.querySelector('span').innerHTML = next.segment;
-    buttonNext.classList.add('fade-in');
-    buttonNext.classList.remove('fade-out');
+    buttonNext.classList.add('fade-in', 'slide-in');
+    buttonNext.classList.remove('fade-out', 'slide-out-right');
   }, 300);
 }
 

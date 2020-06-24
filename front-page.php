@@ -125,7 +125,7 @@
                     <div class="carousel-item-title"><?php the_title(); ?></div>
                     <span><? echo $segment->name; ?></span>
                 </div>
-                <a href="<?php echo get_post_type_archive_link( 'project' ); ?>" class="button is-dark">Ver Todos <i class="fas fa-md fa-chevron-right"></i></a>
+                <a href="/projetos" class="button is-dark">Ver Todos <i class="fas fa-md fa-chevron-right"></i></a>
             </div>
             <?php else: break; endif; $i++; ?>
         <?php endforeach; wp_reset_postdata(); endif; ?>
