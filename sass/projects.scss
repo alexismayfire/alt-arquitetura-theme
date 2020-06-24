@@ -1,11 +1,42 @@
 .projects {
+  /* 
   column-count: 3;
   column-gap: 1em;
-  row-gap: 1em;
+  */
+  display: flex;
+  flex-flow: column wrap;
+  align-content: space-between;
+  counter-reset: items;
 
   @include mobile {
-    column-count: 1;
-    margin-bottom: 2rem;
+    height: auto !important;
+  }
+
+  @include desktop {
+    &::before,
+    &::after {
+      content: '';
+      flex-basis: 100%;
+      width: 0;
+      order: 2;
+    }
+
+    /*
+    &-card::before {
+      counter-increment: items;
+      content: counter(items);
+    }
+    */
+
+    &-card:nth-child(3n + 1) {
+      order: 1;
+    }
+    &-card:nth-child(3n + 2) {
+      order: 2;
+    }
+    &-card:nth-child(3n + 3) {
+      order: 3;
+    }
   }
 
   &-title {
@@ -26,7 +57,15 @@
   }
 
   &-card {
-    margin-bottom: 1em;
+    /* break-inside: avoid-column;*/
+    padding-bottom: 1em;
+    width: 100%;
+    height: auto;
+
+    @include desktop {
+      margin-right: 1em;
+      width: 33%;
+    }
 
     a {
       display: block;
@@ -38,6 +77,8 @@
         background: $primary;
 
         img {
+          width: 100%;
+
           opacity: 1;
           transition: all 300ms ease-in-out;
         }
@@ -79,6 +120,7 @@
       position: fixed;
       left: 0;
       margin: 0 auto;
+      z-index: 20;
 
       background-color: $gray;
     }

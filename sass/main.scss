@@ -105,6 +105,59 @@ main.container {
   }
 }
 
+.slide-out-left {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    display: block;
+    transform: translateX(-100%);
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.slide-out-right {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    display: block;
+    transform: translateX(100%);
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.slide-in {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    display: block;
+    transform: translateX(0);
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.scale-out {
+  div,
+  img,
+  a {
+    transform: scale(0.5);
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.scale-in {
+  img,
+  a {
+    transform: scale(1);
+    transition: all 300ms ease-in-out;
+  }
+}
+
 .home-cta-title {
   font-family: 'Apertura';
   text-transform: lowercase;

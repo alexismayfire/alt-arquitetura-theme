@@ -9,7 +9,9 @@ function getProjectsInfo(res) {
     title: project['title']['rendered'],
     segment: project['segments'][0],
     permalink: project['link'],
-    imgSrc: project['featured_image_src'],
+    imgSrc: project['featured_image_src'][0],
+    imgWidth: project['featured_image_src'][1],
+    imgHeight: project['featured_image_src'][2],
   }));
 }
 
@@ -44,6 +46,7 @@ async function getProjects() {
     'segments',
     'featured_media',
     'featured_image_src',
+    'type',
   ].join('&_fields[]=');
   const projects = await restRequest(
     `wp/v2/project?per_page=100&_fields[]=${fields}`,
@@ -52,34 +55,58 @@ async function getProjects() {
   window.allProjects = projects;
 }
 
-function infiniteScroll(projects) {
-  window.observer = new IntersectionObserver(callback);
+function getTallestCardHeight() {
+  const cards = document.querySelectorAll('.projects-card');
+  const sizes = { 0: 0, 1: 0, 2: 0 };
+
+  cards.forEach((card, index) => {
+    const height = card.getBoundingClientRect().height;
+    sizes[index % 3] += Math.floor(height) + 1;
+  });
+
+  const ordered = Object.values(sizes).sort((a, b) => a - b);
+  return ordered.pop();
+}
+
+function infiniteScrollProjects(projects) {
+  const options = { threshold: 0.5 };
+  window.observer = new IntersectionObserver(callback, options);
+
   const wrapper = document.querySelector('.projects');
+  if (window.innerWidth > 968) {
+    wrapper.style.height = `${getTallestCardHeight() + 24}px`;
+  }
+  const wrapperWidth = wrapper.getBoundingClientRect().width;
+  const maxWidth = (wrapperWidth - 24 - 36) / 3; // 1.5em padding + 2em margins
+
   let size = document.querySelectorAll('.projects-card').length;
-  let last = document.querySelector('.projects-card:last-child');
-  console.log(last);
-  window.observer.observe(last);
+  let lastCard = document.querySelector('.projects-card:last-child');
+  window.observer.observe(lastCard);
 
   function callback(entries) {
     entries.forEach((entry) => {
-      if (entry.isIntersecting && last.id === entry.target.id) {
-        const rows = size / 3;
-        const lastRow = [];
+      if (entry.isIntersecting && lastCard.id === entry.target.id) {
         const projToAdd = projects.slice(size, size + 3);
 
-        // Salva em lastRow os elementos para interpolar
-        projToAdd.forEach((proj, index) => {
-          const selector = `.projects-card:nth-child(${
-            rows * (index + 1) + 1
-          })`;
-          lastRow.push(document.querySelector(selector));
-        });
-
-        // Adiciona os elementos ao DOM
-        projToAdd.forEach((proj, index) => {
-          const elem = createCard(proj);
-          wrapper.insertBefore(createCard(proj), lastRow[index]);
-        });
+        // Ajusta a altura do container, apenas adiciona se for mobile
+        if (window.innerWidth > 968) {
+          let maxHeight = 0;
+          const cards = [];
+          projToAdd.forEach((proj) => {
+            const card = createCard(proj);
+            const ratio = maxWidth / proj.imgWidth;
+            const height = Math.floor(proj.imgHeight * ratio + 20) + 1;
+            if (height > maxHeight) {
+              maxHeight = height;
+            }
+            cards.push(createCard(proj));
+          });
+          const currentHeight = wrapper.getBoundingClientRect().height;
+          wrapper.style.height = `${currentHeight + maxHeight}px`;
+          cards.forEach((card) => wrapper.appendChild(card));
+        } else {
+          projToAdd.forEach((proj) => wrapper.append(createCard(proj)));
+        }
 
         // Anima a entrada de cada elemento
         setTimeout(function () {
@@ -93,10 +120,12 @@ function infiniteScroll(projects) {
 
         // Atualização do observer para o último elemento
         size = document.querySelectorAll('.projects-card').length;
-        window.observer.unobserve(last);
+        window.observer.unobserve(lastCard);
         if (size < projects.length) {
-          last = document.querySelector('.projects-card:last-child');
-          window.observer.observe(last);
+          lastCard = document.querySelector('.projects-card:last-child');
+          window.observer.observe(lastCard);
+        } else {
+          wrapper.style.height = `${getTallestCardHeight() + 24}px`;
         }
       }
     });
@@ -132,7 +161,7 @@ function projectsFilterListener(evt) {
       card.classList.add('fade-in');
       card.classList.remove('fade-out');
     });
-    infiniteScroll(projects);
+    infiniteScrollProjects(projects);
   }, 500);
 }
 
@@ -144,7 +173,7 @@ function projectsFilter() {
 
 async function projectsInit() {
   await getProjects();
-  infiniteScroll(window.allProjects);
+  infiniteScrollProjects(window.allProjects);
   projectsFilter();
 }
 
