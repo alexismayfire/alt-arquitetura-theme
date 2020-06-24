@@ -1,64 +1,46 @@
-<?php get_header(); ?>
+<?php 
+get_header(); 
+$max_posts = get_option( 'posts_per_page' );
+?>
 
 <div class="container">
-    <div class="row">
-        <div class="section col l9">
-            <h1 class="header-text"><?php echo single_cat_title(); ?></h1>
-
-            <div class="row">
-                <?php get_template_part( 'includes/section', 'archive' ); ?>
-            </div>
-
-            <div class="row">
-                <?php
-                    global $wp_query;
-                    
-                    $big = 999999999;
-                    $links = paginate_links( array(
-                        'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-                        'format' => '?paged=%#%',
-                        'current' => max( 1, get_query_var('paged') ),
-                        'total' => $wp_query->max_num_pages,
-                        'prev_text' => '<i class="material-icons">chevron_left</i>',
-                        'next_text' => '<i class="material-icons">chevron_right</i>',
-                        'type' => 'array',
-                    ) );
-
-                    if ( $links ):
-                        $current = max( 1, get_query_var( 'paged' ) );
-                        $total_pages = count($links);
-
-                        $available_links = array_map( function($val, $key) use ($current, $total_pages) {
-                            $page = $current > 1 && $current < $total_pages ? $key : $key + 1;
-
-                            return $page !== $current
-                                ? '<li class="waves-effect">'. $val . '</li>'
-                                : '<li class="active"><a href="#!">'. $current . '</a></li>';
-                        }, $links, array_keys($links) );
-
-                        echo '<ul class="pagination">';
-                        if ( $prev_posts_link = get_previous_posts_link() && 0 == 1):
-                            echo '<li class="waves-effect">'. $prev_posts_link .'</li>';
-                        endif;
-
-                        echo join( '', $available_links);
-
-                        if ( $next_posts_link = get_next_posts_link() && 0 == 1):
-                            echo '<li class="waves-effect">'. $next_posts_link .'</li>';
-                        endif;
-
-                        echo '</ul>';
-                    endif;
-                ?>
+    <section class="section columns is-variable is-6 is-multiline">
+        <div class="column is-full blog-header">
+            <h1 class="projects-title"><?php single_cat_title(); ?></h1>
+            <?php echo get_search_form(); ?>
+        </div>
+        <div class="column is-four-fifths">
+            <div class="blog" data-category-id="<?php the_category_ID( true ); ?>">
+            <?php if ( have_posts() ): while ( have_posts() && $i < $max_posts ): the_post(); $i++; ?>
+                <div class="blog-card" data-id="<?php $post->ID; ?>">
+                    <a href="<?php the_permalink(); ?>">
+                        <img class="blog-card-image" src="<?php the_post_thumbnail_url( 'blog-large' ); ?>" alt="<?php the_title(); ?>" />
+                    </a>
+                    <div class="blog-card-content">
+                        <h4 class="blog-card-title"><?php the_title(); ?></h4>
+                        <span class="blog-card-meta"><?php the_date(); ?> | <?php the_terms ( $post->ID, 'category' ); ?></span>
+                        <span class="blog-card-author"><?php the_author(); ?></span>
+                        
+                        <div class="blog-card-excerpt">
+                            <?php the_excerpt(); ?>
+                            <a class="button is-dark" href="<?php the_permalink(); ?>">Ler mais</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endwhile; endif; ?>
             </div>
         </div>
-        <div class="section col l3">
-            <?php if( is_active_sidebar( 'blog-sidebar' ) ):?>
-                <?php get_search_form(); ?>
-                <?php dynamic_sidebar( 'blog-sidebar' ); ?>
-            <?php endif;?>
+        <div class="column is-one-fifth">
+        <?php 
+            if( is_active_sidebar( 'blog-sidebar' ) ):
+                dynamic_sidebar( 'blog-sidebar' );
+            endif;
+        ?>
         </div>
-    </div>
+    </section>
 </div>
 
-<?php get_footer(); ?>
+<?php 
+wp_enqueue_script( 'blog' ); 
+get_footer(); 
+?>

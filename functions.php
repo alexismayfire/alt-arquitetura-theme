@@ -28,6 +28,7 @@ function load_js() {
     wp_localize_script( 'main', 'restApi', array('url' => rest_url() ) );
 
     wp_register_script( 'projects', get_template_directory_uri() . '/js/projects.js', array(), false, true );
+    wp_register_script( 'blog', get_template_directory_uri() . '/js/blog.js', array(), false, true );
 }
 
 add_action( 'wp_enqueue_scripts', 'load_js' );
@@ -167,30 +168,114 @@ function project_disable_gutenberg($is_enabled, $post_type) {
 // add_filter('use_block_editor_for_post_type', 'project_disable_gutenberg', 10, 2);
 
 // Plugins
-add_filter('wpcf7_autop_or_not', '__return_false');
+add_filter( 'wpcf7_autop_or_not', '__return_false' );
+
+add_action( 'wp_head', function() { ?>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170483133-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-170483133-1');
+    </script>
+<?php } );
 
 // REST API
-function get_image_src( $object, $field_name, $request ) {
+function rest_get_image_src( $object, $field_name, $request ) {
     $id = $object['featured_media'];
-    $feat_img_array = wp_get_attachment_image_src( $id, 'full' );
-    $orient = $feat_img_array[1] > $feat_img_array[2] ? 'landscape' : 'portrait';
-    $feat_img = wp_get_attachment_image_src( $id, 'project-'.$orient );
 
-    return $feat_img[0];
+    if ( $object['type'] === 'project' ) {
+        $feat_img_array = wp_get_attachment_image_src( $id, 'full' );
+        $orient = $feat_img_array[1] > $feat_img_array[2] ? 'landscape' : 'portrait';
+        $feat_img = wp_get_attachment_image_src( $id, 'project-'.$orient );
+    } else {
+        $feat_img = wp_get_attachment_image_src( $id, 'blog-large' );
+    }
+
+    return $feat_img;
 }
 
 function add_thumbnail_to_JSON() {
     register_rest_field( 
-        'project', // post type
+        ['project', 'post'], // post type
         'featured_image_src', // field name
         array(
-            'get_callback'    => 'get_image_src',
+            'get_callback'    => 'rest_get_image_src',
             'update_callback' => null,
             'schema'          => null,
         )
     );
 }
-
 add_action( 'rest_api_init', 'add_thumbnail_to_JSON' );
+
+function full_category_slug( $base, $slug ) {
+    $s = '/' . $slug;
+    if ($base) {
+        return '/' . $base . $s;
+    }
+
+    return $s;
+}
+
+function rest_get_categories( $object, $field_name, $request ) {
+    $cats = wp_get_post_categories( $object['id'], array( 'fields' => 'all' ) );
+    $base = get_option( 'category_base' );
+    $cats_obj = [];
+
+    foreach( $cats as $cat ) {
+        array_push( $cats_obj, array( 
+            'name' => $cat->name,
+            'permalink' => full_category_slug( $base, $cat->slug ),
+        ));
+    }
+
+    return $cats_obj;
+}
+
+function add_categories_to_JSON() {
+    register_rest_field(
+        'post',
+        'categories_details',
+        array(
+            'get_callback'    => 'rest_get_categories',
+            'update_callback' => null,
+            'schema'          => null,
+        )
+    );
+}
+add_action( 'rest_api_init', 'add_categories_to_JSON' );
+
+
+function add_author_name_to_JSON() {
+    register_rest_field(
+        'post',
+        'author_name',
+        array(
+            'get_callback'    => function( $object ) {
+                return get_author_name( $object['author'] );
+            },
+            'update_callback' => null,
+            'schema'          => null,
+        )
+    );
+}
+add_action( 'rest_api_init', 'add_author_name_to_JSON' );
+
+function add_formatted_date_to_JSON() {
+    register_rest_field(
+        'post',
+        'formatted_date',
+        array(
+            'get_callback'    => function( $object ) {
+                return get_the_date( get_option( 'date_format ' ), $object['id'] );
+            },
+            'update_callback' => null,
+            'schema'          => null,
+        )
+    );
+}
+add_action( 'rest_api_init', 'add_formatted_date_to_JSON' );
 
 ?>
