@@ -60,7 +60,12 @@ function createCard(post) {
   excerpt.classList.add('blog-card-excerpt');
   excerpt.innerHTML = post.excerpt;
   const link = document.createElement('a');
-  link.classList.add('button', 'is-dark');
+  link.classList.add(
+    'button',
+    'is-dark',
+    'is-uppercase',
+    'has-text-weight-bold',
+  );
   link.setAttribute('href', post.permalink);
   link.text = 'Ler mais';
   excerpt.appendChild(link);

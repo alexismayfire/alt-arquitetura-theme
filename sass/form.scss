@@ -116,3 +116,37 @@ div.wpcf7-aborted {
     margin-left: 0.5em;
   }
 }
+
+.tooltip {
+  &:hover {
+    .tooltip-content {
+      visibility: visible;
+    }
+  }
+
+  &-content {
+    bottom: 32px;
+    left: -100px;
+    position: absolute;
+    visibility: hidden;
+    width: 232px;
+    z-index: 10;
+
+    background-color: $primary;
+    color: $gray;
+    line-height: 1.2rem;
+
+    &::after {
+      content: '';
+      height: 0;
+      left: calc(50% - 1.25rem);
+      position: absolute;
+      top: 100%;
+      width: 0;
+
+      border-left: 0.75rem solid transparent;
+      border-right: 0.75rem solid transparent;
+      border-top: 0.75rem solid $primary;
+    }
+  }
+}

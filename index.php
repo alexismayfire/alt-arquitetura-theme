@@ -23,7 +23,7 @@ $max_posts = get_option( 'posts_per_page' );
                         
                         <div class="blog-card-excerpt">
                             <?php the_excerpt(); ?>
-                            <a class="button is-dark" href="<?php the_permalink(); ?>">Ler mais</a>
+                            <a class="button is-dark is-uppercase has-text-weight-bold" href="<?php the_permalink(); ?>">Ler mais</i></a>
                         </div>
                     </div>
                 </div>
