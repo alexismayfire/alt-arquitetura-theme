@@ -13,7 +13,7 @@
                 <li><span>Status</span><strong><?php the_field( 'projeto_status');?></strong></li>
             </ul>
         </div>
-        <div class="column is-full">   
+        <div class="column is-full content">   
         <?php 
         if ( have_posts() ): 
             while ( have_posts() ): 
