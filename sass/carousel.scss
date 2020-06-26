@@ -5,6 +5,10 @@
 
     margin-top: 8em;
 
+    @include mobile {
+      margin-top: 2em;
+    }
+
     &-content {
       position: relative;
       width: 100%;
@@ -58,6 +62,14 @@
     background: linear-gradient(180deg, #fafafa 18em, $gray 8em);
     transition: all 300ms ease-in-out;
 
+    @include mobile {
+      margin-left: 1em;
+      margin-right: 1em;
+      padding: 0;
+
+      background: linear-gradient(180deg, #fafafa 10em, $gray 8em);
+    }
+
     a {
       display: flex;
       flex-direction: column;
@@ -70,6 +82,10 @@
       cursor: pointer;
       transition: all 300ms ease-in-out;
 
+      @include mobile {
+        background: linear-gradient(180deg, #fafafa 10em, $primary 8em);
+      }
+
       > a {
         color: $gray;
       }
@@ -79,6 +95,10 @@
         top: 18em;
 
         transition: all 300ms ease-in-out;
+
+        @include mobile {
+          top: 10em;
+        }
       }
     }
 
@@ -92,6 +112,12 @@
 
       border: 2px solid rgba($primary, 0.2);
       transition: all 300ms ease-in-out;
+
+      @include mobile {
+        height: calc(100% - 10em);
+        left: -10px;
+        top: calc(10em + 10px);
+      }
     }
 
     &-image {
@@ -111,6 +137,10 @@
       padding: 2em;
       transition: all 300ms ease-in-out;
 
+      @include mobile {
+        padding: 1em 0;
+      }
+
       &:hover {
         color: $gray;
       }
@@ -121,6 +151,10 @@
 
       font-size: 1.75rem;
       font-weight: 600;
+
+      @include mobile {
+        font-size: 1.5rem;
+      }
     }
   }
 

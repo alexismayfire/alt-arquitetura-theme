@@ -54,7 +54,7 @@
         <?php endif; ?>
     </section>
     <?php endwhile; else: endif; ?>
-    <section class="section columns is-variable is-6 is-multiline no-horizontal-padding" id="<?php the_field( 'servicos_id' ); ?>">
+    <section class="section columns is-variable is-6 is-multiline" id="<?php the_field( 'servicos_id' ); ?>">
         <div class="column is-full">
         <?php 
             $section_title = explode( ' ', get_field( 'servicos_titulo' ));
@@ -100,14 +100,14 @@
             $permalink = get_permalink( $post->ID );
 
             if ( $i === 0): ?>
-                <div class="column is-one-quarter carousel-item">
+                <div class="column is-hidden-touch is-one-quarter carousel-item">
                     <div class="carousel-item-content" data-post-id="<?php echo $post->ID; ?>">
                         <div class="carousel-item-title"><?php the_title(); ?></div>
                         <span><? echo $segment->name; ?></span>
                     </div>
                 </div>
             <?php elseif ( $i === 1 ): ?>
-            <div class="column is-half carousel-card">
+            <div class="column is-half-desktop carousel-card">
                 <a href="<?php echo $permalink; ?>">
                     <img class="carousel-card-image" src="<?php the_post_thumbnail_url( 'project-large' ); ?>" alt="<?php the_title(); ?>" />
                     
@@ -121,7 +121,7 @@
             </div>
             <?php elseif ( $i === 2 ): ?>
             <div class="column is-one-quarter carousel-item">
-                <div class="carousel-item-content" data-post-id="<?php echo $post->ID; ?>">
+                <div class="carousel-item-content is-hidden-touch " data-post-id="<?php echo $post->ID; ?>">
                     <div class="carousel-item-title"><?php the_title(); ?></div>
                     <span><? echo $segment->name; ?></span>
                 </div>
