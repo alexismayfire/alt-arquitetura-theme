@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 <?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
-<section class="hero is-fullheight" style="background-image: url(<?php the_post_thumbnail_url(); ?>); background-repeat: no-repeat; background-size: cover; background-attachment: fixed;">
+<section id="home" class="hero is-fullheight" style="background-image: url(<?php the_post_thumbnail_url(); ?>);">
     <div class="hero-head">
         <?php get_template_part( 'includes/section', 'header' ); ?>
     </div>

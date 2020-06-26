@@ -23,13 +23,6 @@
   src: url('../fonts/Apertura-Bold.otf') format('opentype');
 }
 
-#home {
-  background-image: url('/images/bg-4.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-}
-
 $radius: 0px;
 $primary: #323232;
 $gray: #f2f2f2;
@@ -39,6 +32,18 @@ $input-focus-border-color: $primary !default;
 $input-focus-box-shadow-color: bulmaRgba($primary, 0.25) !default;
 
 @import '../node_modules/bulma/bulma.sass';
+
+#home {
+  background-image: url('/images/bg-4.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+
+  @include mobile {
+    background-size: auto 100vh;
+  }
+}
+
 @import './navbar.scss';
 
 @import './section.scss';
