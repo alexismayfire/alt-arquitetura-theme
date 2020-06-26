@@ -9,7 +9,7 @@ $max_posts = get_option( 'posts_per_page' );
             <h1 class="projects-title"><?php single_post_title(); ?></h1>
             <?php echo get_search_form(); ?>
         </div>
-        <div class="column is-four-fifths">
+        <div class="column is-full is-four-fifths-widescreen">
             <div class="blog">
             <?php if ( have_posts() ): while ( have_posts() && $i < $max_posts ): the_post(); $i++; ?>
                 <div class="blog-card" data-id="<?php $post->ID; ?>">
@@ -30,7 +30,7 @@ $max_posts = get_option( 'posts_per_page' );
             <?php endwhile; endif; ?>
             </div>
         </div>
-        <div class="column is-one-fifth">
+        <div class="column is-full is-one-fifth-widescreen">
         <?php 
             if( is_active_sidebar( 'blog-sidebar' ) ):
                 dynamic_sidebar( 'blog-sidebar' );

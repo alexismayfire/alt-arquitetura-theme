@@ -8,11 +8,7 @@
         <?php if (has_post_thumbnail()): ?>
         <!-- TODO: Change alt to use image title, if it has one -->
         <div class="column is-full is-two-thirds-widescreen">
-            <img 
-                class="responsive-img col s12"
-                src="<?php the_post_thumbnail_url( 'blog-large' ); ?>"
-                alt="<?php the_title(); ?>"
-            />
+            <img src="<?php the_post_thumbnail_url( 'blog-large' ); ?>" alt="<?php the_title(); ?>" />
         </div>
         <?php endif; ?>
         <div class="column is-full is-two-thirds-widescreen blog-post">
