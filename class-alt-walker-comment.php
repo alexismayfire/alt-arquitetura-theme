@@ -1,33 +1,7 @@
 <?php
-/**
- * Custom comment walker for this theme.
- *
- * @package WordPress
- * @subpackage Twenty_Twenty
- * @since Twenty Twenty 1.0
- */
 
 if ( ! class_exists( 'Alt_Walker_Comment' ) ) {
-	/**
-	 * CUSTOM COMMENT WALKER
-	 * A custom walker for comments, based on the walker in Twenty Nineteen.
-	 */
 	class Alt_Walker_Comment extends Walker_Comment {
-
-		/**
-		 * Outputs a comment in the HTML5 format.
-		 *
-		 * @see wp_list_comments()
-		 * @see https://developer.wordpress.org/reference/functions/get_comment_author_url/
-		 * @see https://developer.wordpress.org/reference/functions/get_comment_author/
-		 * @see https://developer.wordpress.org/reference/functions/get_avatar/
-		 * @see https://developer.wordpress.org/reference/functions/get_comment_reply_link/
-		 * @see https://developer.wordpress.org/reference/functions/get_edit_comment_link/
-		 *
-		 * @param WP_Comment $comment Comment to display.
-		 * @param int        $depth   Depth of the current comment.
-		 * @param array      $args    An array of arguments.
-		 */
 		protected function html5_comment( $comment, $depth, $args ) { ?>
 			<div id="comment-<?php comment_ID(); ?>" <?php comment_class( $this->has_children ? 'parent' : '', $comment ); ?>>
 				<article id="div-comment-<?php comment_ID(); ?>" class="comment-body mb-4">
@@ -71,7 +45,7 @@ if ( ! class_exists( 'Alt_Walker_Comment' ) ) {
 
 					if ( $comment_reply_link ): ?>
 					<footer class="comment-footer-meta">
-						<?php echo $comment_reply_link; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Link is escaped in https://developer.wordpress.org/reference/functions/get_comment_reply_link/ ?>
+						<?php echo $comment_reply_link; ?>
 					</footer>
 					<?php endif; ?>
 					<hr class="styled-separator is-style-wide has-background-grey" aria-hidden="true" />
