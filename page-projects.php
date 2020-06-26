@@ -7,7 +7,7 @@ get_header();
 
 ?>
 
-<div class="container">
+<main class="container">
     <section class="section columns is-variable is-6 is-multiline">
         <div class="column is-half">
             <h1 class="projects-title"><?php echo the_title() ?></h1>
@@ -81,6 +81,6 @@ get_header();
         <?php $i++; endwhile; else: endif; wp_enqueue_script( 'projects' ); ?>
         </div>
     </section>
-</div>
+</main>
 
 <?php get_footer(); ?>

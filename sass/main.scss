@@ -94,6 +94,10 @@ main.container {
 
 .section {
   padding: 6em 1.5em 3em 1.5em;
+
+  @include mobile {
+    padding-top: 4.5em;
+  }
 }
 
 .fade-in {

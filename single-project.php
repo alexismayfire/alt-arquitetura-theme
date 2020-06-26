@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<div class="container">
+<main class="container">
     <section class="section columns-is-variable is-6 is-multiline pb-0">
         <div class="column is-full">
             <h1 class="project-title"><?php the_title(); ?></h1>
@@ -36,6 +36,6 @@
             <?php echo do_shortcode( '[contact-form-7 id="98" title="Contato Home"]' ); ?>
         </div>
     </section>
-</div>
+</main>
 
 <?php get_footer(); ?>

@@ -2,7 +2,7 @@
 
 <?php $comments = get_comments( array( 'post_id' => $post->ID ) ); ?>
 
-<div class="container">
+<main class="container">
     <section class="section columns pt-1 is-centered is-variable is-6 is-multiline">
     <?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
         <?php if (has_post_thumbnail()): ?>
@@ -27,5 +27,5 @@
         </div>
     <?php endwhile; endif; ?>
     </section>
-</div>
+</main>
 <?php get_footer(); ?>

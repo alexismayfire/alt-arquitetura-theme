@@ -139,16 +139,30 @@ async function carouselInit() {
   items.forEach((item) => item.addEventListener('click', carouselItemListener));
 }
 
+function toggleMenu() {
+  if (window.innerWidth > 768) {
+    return;
+  }
+
+  document.querySelector('header.navbar').classList.toggle('is-open');
+  const home = document.querySelector('#home');
+  if (home) {
+    home.querySelector('.hero-body').classList.toggle('is-invisible');
+  }
+  document.querySelector('main').classList.toggle('is-invisible');
+}
+
 function menuInit() {
+  const navbar = document.querySelector('header.navbar');
   const menuHamb = document.querySelector('[data-target=navbarMenuHeroC]');
-  menuHamb.addEventListener('click', function (evt) {
-    document.querySelector('#navbarMenuHeroC').classList.toggle('is-active');
-  });
+
+  menuHamb.addEventListener('click', toggleMenu);
 
   if (window.location.pathname === '/') {
     document.querySelectorAll('a[href^="/#"]').forEach((anchor) => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
+        toggleMenu();
         const href = this.getAttribute('href').split('/')[1];
         document.querySelector(href).scrollIntoView({
           behavior: 'smooth',
@@ -167,7 +181,6 @@ function scrollInit(evt) {
   const elem = document.querySelector('.navbar');
   const elemHeight = elem.getBoundingClientRect().height;
   const home = window.location.pathname === '/';
-  const hero = document.querySelector('.hero.is-fullheight');
   const container = document.querySelector('header ~ div');
   if (elem) {
     if (isInViewport(elem) && !window.location.hash) {
