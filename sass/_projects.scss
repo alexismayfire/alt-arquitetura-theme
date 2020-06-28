@@ -39,23 +39,6 @@
     }
   }
 
-  &-title {
-    @extend .section-title;
-
-    height: fit-content;
-
-    line-height: 3rem;
-
-    &::before {
-      height: -webkit-fill-available;
-    }
-
-    @include mobile {
-      font-size: 2.5rem;
-      line-height: initial;
-    }
-  }
-
   &-card {
     /* break-inside: avoid-column;*/
     padding-bottom: 1em;

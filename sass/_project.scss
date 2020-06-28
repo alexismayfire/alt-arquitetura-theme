@@ -1,16 +1,4 @@
 .project {
-  &-title {
-    @extend .section-title;
-
-    font-size: 2.5rem;
-    line-height: 125%;
-
-    @include mobile {
-      font-size: 1.5rem;
-      line-height: 100%;
-    }
-  }
-
   &-detail {
     align-items: stretch;
     display: grid;

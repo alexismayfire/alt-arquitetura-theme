@@ -10,7 +10,7 @@ get_header();
 <main class="container">
     <section class="section columns is-variable is-6 is-multiline">
         <div class="column is-half">
-            <h1 class="projects-title"><?php echo the_title() ?></h1>
+            <h1 class="section-title"><?php echo the_title() ?></h1>
         </div>
         <div class="column is-half projects-categories">
             <span>Filtrar por:</span>

@@ -3,7 +3,7 @@
 <main class="container">
     <section class="section columns-is-variable is-6 is-multiline pb-0">
         <div class="column is-full">
-            <h1 class="project-title"><?php the_title(); ?></h1>
+            <h1 class="section-title is-size-2 is-size-4-touch"><?php the_title(); ?></h1>
         </div>
         <div class="column is-full">
             <ul class="project-detail">

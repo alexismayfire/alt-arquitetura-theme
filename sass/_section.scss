@@ -1,47 +1,43 @@
 .section {
   &-title {
-    height: 2.75em;
     margin-bottom: 2rem;
+    max-width: 100%;
     position: relative;
-    width: fit-content;
+    width: max-content;
 
     background-color: $gray;
     font-size: 4rem;
     font-weight: 600;
-    line-height: 2.75rem;
+    line-height: 3rem;
     padding: 2rem 2rem 2rem 0;
     text-transform: lowercase;
 
     @include mobile {
-      height: 3em;
       font-size: 2.5rem;
+      line-height: 2rem;
     }
 
     &-prepend {
       display: block;
 
       font-size: 2.5rem;
-      line-height: 125%;
+      margin-top: -0.75rem;
 
       @include mobile {
         font-size: 1.5rem;
-        line-height: 100%;
+        margin-top: -0.5rem;
       }
     }
   }
 
   &-title::before {
     content: '';
-    height: 2.75em;
+    height: 100%;
     position: absolute;
     left: -50vw;
     top: 0;
     width: 50vw;
 
     background-color: $gray;
-
-    @include mobile {
-      height: 3em;
-    }
   }
 }

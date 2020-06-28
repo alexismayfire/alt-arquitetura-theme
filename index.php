@@ -6,7 +6,7 @@ $max_posts = get_option( 'posts_per_page' );
 <div class="container">
     <section class="section columns is-variable is-6 is-multiline">
         <div class="column is-full blog-header">
-            <h1 class="projects-title"><?php single_post_title(); ?></h1>
+            <h1 class="section-title"><?php single_post_title(); ?></h1>
             <?php echo get_search_form(); ?>
         </div>
         <div class="column is-full is-four-fifths-widescreen">
