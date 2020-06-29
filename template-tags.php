@@ -2,7 +2,7 @@
 
 function html_comment_field( $name, $label, $type ) {
     $special_classes = array(
-        'checkbox' => 'is-two-thirds-widescreen is-flex is-vcentered py-0',
+        'checkbox' => 'is-two-thirds-widescreen',
         'textarea' => ''
     );
     
