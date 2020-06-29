@@ -56,6 +56,8 @@ $input-focus-box-shadow-color: bulmaRgba($primary, 0.25) !default;
 @import './blog.scss';
 
 body {
+  overflow: hidden;
+
   background-color: #fafafa;
   font-family: Montserrat, sans-serif;
   font-size: 18px;
@@ -84,10 +86,27 @@ textarea {
   font-family: 'Montserrat';
 }
 
+select {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
 .input,
 .textarea {
   padding: 1.5em 1em;
   resize: none;
+
+  // TODO: forçando pelo z-index, tentar focus pelo JS?
+  @include mobile {
+    z-index: 10;
+
+    background-color: rgba($gray, 0.7);
+  }
+}
+
+.select {
+  align-items: center;
+  display: flex;
 }
 
 .no-horizontal-padding > .column {

@@ -155,8 +155,6 @@ async function postsInit() {
         post.categories.some((cat) => cat.name === categoryName),
       )
     : window.allPosts;
-
-  console.log(filteredPosts.length);
   infiniteScrollPosts(filteredPosts);
 }
 

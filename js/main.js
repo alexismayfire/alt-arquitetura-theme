@@ -42,16 +42,10 @@ function changeCurrentItem(proj) {
   const imageTag = card.querySelector('.carousel-card-image');
   const linkTags = card.querySelectorAll('a');
 
-  // const outClasses = ['fade-out', 'scale-out'];
-  // const inClasses = ['fade-in', 'scale-in'];
-  // animateParentClassList([cardContent, imageTag], inClasses, OutClasses);
-
-  /*
   cardContent.parentElement.classList.remove('fade-in', 'scale-in');
   cardContent.parentElement.classList.add('fade-out', 'scale-out');
   imageTag.parentElement.classList.remove('fade-in', 'scale-in');
   imageTag.parentElement.classList.add('fade-out', 'scale-out');
-  */
 
   setTimeout(function () {
     imageTag.setAttribute('src', proj.image);
@@ -284,10 +278,32 @@ function singleProjectNavInit() {
   }
 }
 
+function formInvalidListener(evt) {
+  const labels = document.querySelectorAll('.wpcf7-not-valid-tip');
+  labels.forEach((label) => {
+    const parent = label.parentElement.parentElement;
+    parent.appendChild(label);
+  });
+}
+
+function contactFormInit() {
+  const wpcf7Elm = document.querySelector('.wpcf7');
+  if (wpcf7Elm) {
+    wpcf7Elm.addEventListener('wpcf7invalid', formInvalidListener, false);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-  carouselInit();
+  const { pathname, search } = window.location;
+  const parts = pathname.split('/');
+
+  if (pathname === '/' && search === '') {
+    carouselInit();
+  } else if (parts.length > 3 && parts[1] === 'projetos') {
+    singleProjectNavInit();
+  }
   menuInit();
-  singleProjectNavInit();
+  contactFormInit();
 });
 
 function scrollInit(evt) {
