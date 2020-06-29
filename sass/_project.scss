@@ -1,4 +1,76 @@
 .project {
+  &-nav {
+    height: 36px;
+    width: 24px;
+    position: fixed;
+    top: calc((100vh / 2) + 60px);
+    z-index: 10;
+
+    opacity: 1;
+    transition: all 300ms ease-in-out;
+
+    svg {
+      height: inherit;
+      width: inherit;
+      opacity: 1;
+    }
+
+    &-right {
+      right: 2em;
+
+      &:hover {
+        right: 0;
+      }
+    }
+
+    &-left {
+      left: 2em;
+
+      &:hover {
+        left: 0;
+      }
+    }
+
+    &:hover svg {
+      height: 0;
+      width: 0;
+      opacity: 0;
+    }
+
+    &:hover &-featured {
+      height: 150px;
+      width: 300px;
+
+      opacity: 1;
+      transition: all 500ms ease-in-out;
+      transition-property: opacity, width;
+    }
+
+    &-right:hover &-featured {
+      right: 277px;
+    }
+
+    &-featured {
+      align-items: center;
+      display: flex;
+      flex-flow: column wrap;
+      top: -75px;
+
+      opacity: 0;
+
+      img {
+        filter: brightness(0.4);
+      }
+
+      span {
+        position: absolute;
+        top: 50%;
+
+        color: $gray;
+      }
+    }
+  }
+
   &-detail {
     align-items: stretch;
     display: grid;

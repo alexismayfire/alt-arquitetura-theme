@@ -181,8 +181,10 @@ async function carouselInit() {
     // handleCarouselSwipe();
     const left = document.querySelector('.carousel-item-navleft');
     const right = document.querySelector('.carousel-item-navright');
-    left.addEventListener('click', carouselMobileItemListener);
-    right.addEventListener('click', carouselMobileItemListener);
+    if (left && right) {
+      left.addEventListener('click', carouselMobileItemListener);
+      right.addEventListener('click', carouselMobileItemListener);
+    }
   }
 }
 
@@ -244,9 +246,48 @@ function menuInit() {
   }
 }
 
+function singleProjectNavInit() {
+  const galleryItems = document.querySelectorAll('.blocks-gallery-item');
+  const contactSection = document.querySelector('#contato');
+  let firstPhotoId, contactTitle, navs;
+
+  if (galleryItems.length) {
+    firstPhotoId = galleryItems[0].querySelector('img').dataset.id;
+    contactTitle = contactSection.querySelector('h2');
+    navs = document.querySelectorAll('.project-nav');
+
+    const options = { threshold: 0.25 };
+    window.observer = new IntersectionObserver(callback, options);
+    galleryItems.forEach((item) => window.observer.observe(item));
+    window.observer.observe(contactTitle);
+  }
+
+  function callback(entries) {
+    entries.forEach((entry) => {
+      const { isIntersecting, intersectionRect, target } = entry;
+      if (isIntersecting) {
+        if (target.classList.contains('blocks-gallery-item')) {
+          navs.forEach((nav) => nav.classList.remove('is-hidden'));
+        } else {
+          navs.forEach((nav) => nav.classList.add('is-hidden'));
+        }
+      } else {
+        if (
+          target.classList.contains('blocks-gallery-item') &&
+          target.querySelector('img').dataset.id === firstPhotoId &&
+          intersectionRect.top > 0
+        ) {
+          navs.forEach((nav) => nav.classList.add('is-hidden'));
+        }
+      }
+    });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   carouselInit();
   menuInit();
+  singleProjectNavInit();
 });
 
 function scrollInit(evt) {

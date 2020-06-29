@@ -55,4 +55,12 @@ function get_comment_datetime_fmt( $comment, $callback ) {
     return $callback( sprintf( ( '%1$s às %2$s' ), $date, $time ) );
 }
 
+function get_related_meta( $post_id ) {
+    return array(
+        'permalink' => get_the_permalink( $post_id ),
+        'img' => get_the_post_thumbnail_url( $post_id, 'project-small' ),
+        'title' => get_the_title( $post_id ),
+    );
+}
+
 ?>

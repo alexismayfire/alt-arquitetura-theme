@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 <main class="container">
-    <section class="section columns-is-variable is-6 is-multiline pb-0">
+    <section class="section columns-is-variable is-6 is-multiline is-relative pb-0">
         <div class="column is-full">
             <h1 class="section-title is-size-2 is-size-4-touch"><?php the_title(); ?></h1>
         </div>
@@ -18,11 +18,67 @@
         if ( have_posts() ): 
             while ( have_posts() ): 
                 the_post();
+
+                // Loop para pegar os posts relacionados
+                $current_id = $post->ID;
+                $related_args = array(
+                    'post_type' => 'project',
+                    'segments' => array( $cat[0]->name ),
+                    'posts_per_page' => -1,
+                    'post__notin' => array( $post->ID ),
+                );
+                $related = new WP_Query( $related_args );
+
+                if( $related->have_posts() ) :
+                    while ( $related->have_posts() ) :
+                        $related->the_post();
+                        
+                        if ( $post->ID > $current_id ):
+                            $prev = get_related_meta( $post->ID );
+                        elseif ( $post->ID < $current_id ):
+                            $next = get_related_meta( $post->ID );
+                            break;
+                        endif;
+                    endwhile;
+
+                    if ( ! $prev ):
+                        $prev_id = $related->posts[$related->post_count - 1]->ID;
+                        $prev = get_related_meta( $prev_id );
+                    elseif ( ! $next ):
+                        $next_id = $related->posts[0]->ID;
+                        $next = get_related_meta( $next_id );
+                    endif;
+                    wp_reset_postdata();
+                endif;
+                
                 the_content();
+
             endwhile;
         endif;
         ?>
+            <div class="columns is-full is-mobile is-hidden-desktop">
+                <div class="column is-half-touch is-relative">
+                    <a class="button is-dark" href="<?php echo $prev['permalink']; ?>" title="<?php echo $next['title']; ?>">Anterior</a>
+                </div>
+                <div class="column is-half-touch is-relative">
+                    <a class="button is-dark" href="<?php echo $next['permalink']; ?>" title="<?php echo $next['title']; ?>">Próximo</a>
+                </div>
+            </div>
         </div>
+        <a class="project-nav project-nav-left is-hidden-touch is-hidden" href="<?php echo $prev['permalink']; ?>">
+            <i class="fas fa-2x fa-chevron-left"></i>
+            <div class="project-nav-featured is-relative">
+                <img src="<?php echo $prev['img']; ?>" />
+                <span class="has-text-weight-semibold"><?php echo $prev['title']; ?></span>
+            </div>
+        </a>
+        <a class="project-nav project-nav-right is-hidden-touch is-hidden" href="<?php echo $next['permalink']; ?>">
+            <i class="fas fa-2x fa-chevron-right"></i>
+            <div class="project-nav-featured is-relative">
+                <img src="<?php echo $next['img']; ?>" />
+                <span class="has-text-weight-semibold"><?php echo $next['title']; ?></span>
+            </div>
+        </a>
     </section>
     <section class="section columns is-variable is-6 is-multiline pt-0" id="contato">
         <div class="column is-full">
