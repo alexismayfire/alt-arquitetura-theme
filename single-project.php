@@ -56,12 +56,12 @@
             endwhile;
         endif;
         ?>
-            <div class="columns is-full is-mobile is-hidden-desktop">
-                <div class="column is-half-touch is-relative">
-                    <a class="button is-dark" href="<?php echo $prev['permalink']; ?>" title="<?php echo $next['title']; ?>">Anterior</a>
+            <div class="columns is-full is-mobile has-text-centered is-hidden-desktop">
+                <div class="column is-half-touch is-relative project-navmobile">
+                    <a class="button is-dark project-navmobile-button" href="<?php echo $prev['permalink']; ?>" title="<?php echo $next['title']; ?>"><i class="fas fa-md fa-chevron-left"></i> Anterior</a>
                 </div>
-                <div class="column is-half-touch is-relative">
-                    <a class="button is-dark" href="<?php echo $next['permalink']; ?>" title="<?php echo $next['title']; ?>">Próximo</a>
+                <div class="column is-half-touch is-relative project-navmobile">
+                    <a class="button is-dark project-navmobile-button" href="<?php echo $next['permalink']; ?>" title="<?php echo $next['title']; ?>">Próximo <i class="fas fa-md fa-chevron-right"></i></a>
                 </div>
             </div>
         </div>

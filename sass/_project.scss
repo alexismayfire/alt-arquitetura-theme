@@ -71,6 +71,23 @@
     }
   }
 
+  &-navmobile {
+    &-button {
+      height: 3em !important;
+
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    &:first-child svg {
+      margin-right: 0.5em;
+    }
+
+    &:last-child svg {
+      margin-left: 0.5em;
+    }
+  }
+
   &-detail {
     align-items: stretch;
     display: grid;
