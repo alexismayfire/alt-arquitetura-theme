@@ -3,10 +3,10 @@ get_header();
 $max_posts = get_option( 'posts_per_page' );
 ?>
 
-<div class="container">
+<main class="container">
     <section class="section columns is-variable is-6 is-multiline">
         <div class="column is-full blog-header">
-            <h1 class="projects-title"><?php single_cat_title(); ?></h1>
+            <h1 class="section-title"><?php single_cat_title(); ?></h1>
             <?php echo get_search_form(); ?>
         </div>
         <div class="column is-four-fifths">
@@ -30,7 +30,7 @@ $max_posts = get_option( 'posts_per_page' );
             <?php endwhile; endif; ?>
             </div>
         </div>
-        <div class="column is-one-fifth">
+        <div class="column is-one-fifth blog-categories">
         <?php 
             if( is_active_sidebar( 'blog-sidebar' ) ):
                 dynamic_sidebar( 'blog-sidebar' );
