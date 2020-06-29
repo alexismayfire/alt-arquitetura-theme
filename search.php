@@ -1,9 +1,10 @@
 <?php get_header(); ?>
 
-<div class="container">
+<main class="container">
     <section class="section columns is-variable is-6 is-multiline">
-        <div class="column is-full">
-            <h1 class="projects-title">blog</h1>
+        <div class="column is-full blog-header">
+            <h1 class="section-title">blog</h1>
+            <?php echo get_search_form(); ?>
         </div>
         <div class="column is-four-fifths">
         <?php
@@ -46,26 +47,28 @@
             echo '</ul>';
         
         elseif ( $wp_query->have_posts() ): ?>
-            <h3 class="title">Resultados da busca para: <?php the_search_query(); ?></h3>
+            <h3 class="is-size-4 mb-4">Resultados da busca para: <span class="has-text-weight-semibold"><?php the_search_query(); ?></span></h3>
             <div class="blog">
             <?php while ( $wp_query->have_posts() ): $wp_query->the_post(); ?>
                 <div class="blog-card">
                     <a href="<?php the_permalink(); ?>">
-                        <img class="blog-card-image" src="<?php the_post_thumbnail_url( 'blog-large' ); ?>" alt="<?php the_title(); ?>" />
-                        
+                        <img class="blog-card-image" src="<?php the_post_thumbnail_url( 'blog-large' ); ?>" alt="<?php the_title(); ?>" />      
                     </a>
                     <div class="blog-card-content">
                         <h4 class="blog-card-title"><?php the_title(); ?></h4>
-                        <?php the_excerpt(); ?>
-                        <a class="button is-dark" href="<?php the_permalink(); ?>">Ler mais</a>
+                        <span class="blog-card-meta"><?php echo get_the_date(); ?> | <?php the_terms ( $post->ID, 'category' ); ?></span>
+                        <span class="blog-card-author"><?php the_author(); ?></span>
+                        
+                        <div class="blog-card-excerpt">
+                            <?php the_excerpt(); ?>
+                            <a class="button is-dark is-uppercase has-text-weight-bold" href="<?php the_permalink(); ?>">Ler mais</i></a>
+                        </div>
                     </div>
                 </div>
             <?php endwhile; ?>
             </div>
         <?php else: ?>
-            <h3 class="title">Nenhum post encontrado para: <?php the_search_query(); ?></h3>
-            <p>Buscar novamente?</p>
-            <li class="widget_search"><?php get_search_form(); ?></li>
+            <h3 class="is-size-4 mb-4">Nenhum post encontrado para: <span class="has-text-weight-semibold"><?php the_search_query(); ?></span></h3>
         <?php endif; ?>
         </div>
         <div class="column is-one-fifth">
@@ -76,6 +79,6 @@
         ?>
         </div>
     </section>
-</div>
+</main>
 
 <?php get_footer(); ?>

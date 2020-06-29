@@ -142,7 +142,22 @@ function infiniteScrollPosts(posts) {
 
 async function postsInit() {
   await getPosts();
-  infiniteScrollPosts(window.allPosts);
+  const page = window.location.pathname;
+  const path = page.split('/');
+  let categoryName = null;
+  if (path.length > 3 && path[1] === 'blog') {
+    const current = document.querySelector('.current-cat');
+    categoryName = current.firstChild.text;
+  }
+
+  const filteredPosts = categoryName
+    ? window.allPosts.filter((post) =>
+        post.categories.some((cat) => cat.name === categoryName),
+      )
+    : window.allPosts;
+
+  console.log(filteredPosts.length);
+  infiniteScrollPosts(filteredPosts);
 }
 
 document.addEventListener('DOMContentLoaded', postsInit);
