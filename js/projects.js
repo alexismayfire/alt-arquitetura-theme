@@ -208,15 +208,7 @@ async function infiniteScrollProjects(projects) {
   }
 }
 
-function projectsFilterListener(evt) {
-  const current = document.querySelector('.button-filter.is-active');
-  current.addEventListener('click', projectsFilterListener);
-  current.classList.remove('is-active');
-
-  evt.target.removeEventListener('click', projectsFilterListener);
-  evt.target.classList.add('is-active');
-
-  const segment = parseInt(evt.target.dataset.segment);
+function projectsFilterBySegment(segment) {
   // Filtrando os projetos de acordo com o botão escolhido
   const projects = segment
     ? window.allProjects.filter((proj) => proj.segment === segment)
@@ -254,10 +246,32 @@ function projectsFilterListener(evt) {
   }, 250);
 }
 
+function projectsButtonFilterListener(evt) {
+  const current = document.querySelector('.button-filter.is-active');
+  current.addEventListener('click', projectsButtonFilterListener);
+  current.classList.remove('is-active');
+
+  evt.target.removeEventListener('click', projectsButtonFilterListener);
+  evt.target.classList.add('is-active');
+
+  const segment = parseInt(evt.target.dataset.segment, 10);
+  projectsFilterBySegment(segment);
+}
+
+function projectsSelectFilterListener(evt) {
+  evt.preventDefault();
+  projectsFilterBySegment(parseInt(evt.target.value, 10));
+}
+
 function projectsFilter() {
-  document
-    .querySelectorAll('.button-filter:not(.is-active)')
-    .forEach((elem) => elem.addEventListener('click', projectsFilterListener));
+  const btns = document.querySelectorAll('.button-filter:not(.is-active)');
+  btns.forEach((elem) => {
+    elem.disabled = false;
+    elem.addEventListener('click', projectsButtonFilterListener);
+  });
+  const select = document.querySelector('select[name=categories]');
+  select.disabled = false;
+  select.addEventListener('change', projectsSelectFilterListener);
 }
 
 async function projectsInit() {

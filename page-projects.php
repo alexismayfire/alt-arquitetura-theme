@@ -5,6 +5,15 @@
 
 get_header(); 
 
+$cat_args = array(
+    'order_by' => 'term_id',
+    'order' => 'ASC',
+    'hide_empty' => true,
+);
+
+$terms = get_terms( 'segments', $cat_args );        
+wp_localize_script( 'projects', 'categories', $terms );
+
 ?>
 
 <main class="container">
@@ -14,21 +23,18 @@ get_header();
         </div>
         <div class="column is-half projects-categories">
             <span>Filtrar por:</span>
-            <button class="button-filter is-active">Todos</a>
-        <?php
-        
-        $cat_args = array(
-            'order_by' => 'term_id',
-            'order' => 'ASC',
-            'hide_empty' => true,
-        );
-
-        $terms = get_terms( 'segments', $cat_args );        
-        wp_localize_script( 'projects', 'categories', $terms );
-        
-        foreach( $terms as $taxonomy ): ?>
-            <button class="button-filter" data-segment="<?php echo $taxonomy->term_id; ?>"><?php echo $taxonomy->name; ?></a>
+            <button class="button-filter is-active is-hidden-touch">Todos</button>
+        <?php foreach( $terms as $taxonomy ): ?>
+            <button disabled class="button-filter is-hidden-touch" data-segment="<?php echo $taxonomy->term_id; ?>"><?php echo $taxonomy->name; ?></button>
         <?php endforeach; ?>
+            <div class="select is-hidden-desktop">
+                <select name="categories" disabled>
+                    <option value="">Todos</option>
+                <?php foreach( $terms as $taxonomy ): ?>
+                    <option value="<?php echo $taxonomy->term_id; ?>"><?php echo $taxonomy->name; ?></option>
+                <?php endforeach; ?>
+                </select>
+            </div>
         </div>
         <?php 
         $args = array(

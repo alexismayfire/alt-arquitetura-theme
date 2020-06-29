@@ -1,8 +1,4 @@
 .projects {
-  /* 
-  column-count: 3;
-  column-gap: 1em;
-  */
   display: flex;
   flex-flow: column wrap;
   align-content: space-between;
@@ -21,13 +17,6 @@
       order: 2;
     }
 
-    /*
-    &-card::before {
-      counter-increment: items;
-      content: counter(items);
-    }
-    */
-
     &-card:nth-child(3n + 1) {
       order: 1;
     }
@@ -40,7 +29,6 @@
   }
 
   &-card {
-    /* break-inside: avoid-column;*/
     padding-bottom: 1em;
     width: 100%;
     height: auto;
@@ -95,14 +83,15 @@
   &-categories {
     align-items: center;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
     margin-bottom: 2em;
 
     @include mobile {
       bottom: 0;
-      position: fixed;
       left: 0;
       margin: 0 auto;
+      position: fixed;
+      width: 100%;
       z-index: 20;
 
       background-color: $gray;

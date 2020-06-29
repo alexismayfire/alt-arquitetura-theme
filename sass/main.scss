@@ -78,12 +78,15 @@ main.container {
   align-items: center;
 }
 
+input,
+select,
+textarea {
+  font-family: 'Montserrat';
+}
+
 .input,
 .textarea {
   padding: 1.5em 1em;
-}
-
-.textarea {
   resize: none;
 }
 
