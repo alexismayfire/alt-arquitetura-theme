@@ -17,6 +17,13 @@ function isInViewport(elem) {
   return bounding.top + bounding.height > 0;
 }
 
+function animateParentClassList(elements, removeClasses, addClasses) {
+  elements.forEach((elem) => {
+    elem.parentElement.classList.add(...removeClasses);
+    elem.parentElement.classList.remove(...addClasses);
+  });
+}
+
 function getFeaturedImage(post) {
   const media = post['_embedded']['wp:featuredmedia'][0];
   return media['media_details']['sizes']['project-large']['source_url'];
@@ -27,10 +34,7 @@ function getCustomTaxonomy(post) {
   return term[0]['name'];
 }
 
-async function carouselItemListener(evt) {
-  evt.preventDefault();
-  const postId = evt.target.dataset.postId;
-
+function changeCurrentItem(proj) {
   const card = document.querySelector('.carousel-card');
   const cardContent = document.querySelector('.carousel-card-content');
   const titleTag = card.querySelector('.carousel-card-title');
@@ -38,11 +42,16 @@ async function carouselItemListener(evt) {
   const imageTag = card.querySelector('.carousel-card-image');
   const linkTags = card.querySelectorAll('a');
 
-  const proj = window.projects[postId];
+  // const outClasses = ['fade-out', 'scale-out'];
+  // const inClasses = ['fade-in', 'scale-in'];
+  // animateParentClassList([cardContent, imageTag], inClasses, OutClasses);
+
+  /*
   cardContent.parentElement.classList.remove('fade-in', 'scale-in');
   cardContent.parentElement.classList.add('fade-out', 'scale-out');
   imageTag.parentElement.classList.remove('fade-in', 'scale-in');
   imageTag.parentElement.classList.add('fade-out', 'scale-out');
+  */
 
   setTimeout(function () {
     imageTag.setAttribute('src', proj.image);
@@ -55,6 +64,15 @@ async function carouselItemListener(evt) {
   }, 300);
 
   linkTags.forEach((link) => link.setAttribute('href', proj.slug));
+}
+
+async function carouselItemListener(evt) {
+  evt.preventDefault();
+
+  const postId = evt.target.dataset.postId;
+  const proj = window.projects[postId];
+
+  changeCurrentItem(proj);
 
   const prev = window.projects[proj.prev];
   const next = window.projects[proj.next];
@@ -80,6 +98,25 @@ async function carouselItemListener(evt) {
     buttonNext.classList.add('fade-in', 'slide-in');
     buttonNext.classList.remove('fade-out', 'slide-out-right');
   }, 300);
+}
+
+async function carouselMobileItemListener(evt) {
+  evt.preventDefault();
+
+  const target = evt.target.parentElement;
+  let postId = target.dataset.postId;
+  if (!postId) {
+    postId = target.parentElement.dataset.postId;
+  }
+  const proj = window.projects[postId];
+
+  changeCurrentItem(proj);
+
+  const buttonPrev = document.querySelector('.carousel-item-navleft');
+  buttonPrev.dataset.postId = proj.prev;
+
+  const buttonNext = document.querySelector('.carousel-item-navright');
+  buttonNext.dataset.postId = proj.next;
 }
 
 function mapFeaturedProjectsIds(res) {
@@ -142,6 +179,10 @@ async function carouselInit() {
     );
   } else {
     // handleCarouselSwipe();
+    const left = document.querySelector('.carousel-item-navleft');
+    const right = document.querySelector('.carousel-item-navright');
+    left.addEventListener('click', carouselMobileItemListener);
+    right.addEventListener('click', carouselMobileItemListener);
   }
 }
 

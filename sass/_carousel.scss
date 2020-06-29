@@ -7,6 +7,21 @@
 
     @include mobile {
       margin-top: 2em;
+
+      &-navright,
+      &-navleft {
+        bottom: 20em;
+        position: absolute;
+        z-index: 10;
+      }
+
+      &-navright {
+        right: 2em;
+      }
+
+      &-navleft {
+        left: 2em;
+      }
     }
 
     &-content {

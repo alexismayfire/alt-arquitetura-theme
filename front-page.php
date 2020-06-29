@@ -42,10 +42,12 @@
                 <div class="team">
                 <?php foreach( $members as $post ): ?>
                     <?php setup_postdata( $post ); ?>
-                    <div class="team-item">
+                    <div class="team-item has-text-centered-desktop">
                         <img src="<?php the_post_thumbnail_url( 'team' ); ?>" alt="<?php the_title(); ?>" class="team-item-image" />
-                        <span class="team-item-name"><?php the_title(); ?></span>
-                        <span class="team-item-title"><?php the_content(); ?></span>
+                        <div class="team-item-meta">
+                            <span class="team-item-name"><?php the_title(); ?></span>
+                            <span class="team-item-title"><?php the_content(); ?></span>
+                        </div>
                     </div>
                 <?php endforeach; ?>
                 </div>
@@ -80,7 +82,7 @@
             </div>
         <?php endforeach; wp_reset_postdata(); endif; ?>
     </section>
-    <section class="section columns is-variable is-6 is-multiline">
+    <section class="section columns is-variable is-6 is-multiline is-relative">
         <div class="column is-full">
         <?php 
             $section_title = explode( ' ', get_field( 'projetos_titulo' ));
@@ -100,8 +102,9 @@
             $permalink = get_permalink( $post->ID );
 
             if ( $i === 0): ?>
-                <div class="column is-hidden-touch is-one-quarter carousel-item">
-                    <div class="carousel-item-content" data-post-id="<?php echo $post->ID; ?>">
+                <div class="column is-one-quarter carousel-item">
+                    <div class="carousel-item-navleft is-hidden-desktop" data-post-id="<?php echo $post->ID; ?>"><i class="fas fa-2x fa-chevron-left"></i></div>
+                    <div class="carousel-item-content is-hidden-touch" data-post-id="<?php echo $post->ID; ?>">
                         <div class="carousel-item-title"><?php the_title(); ?></div>
                         <span><? echo $segment->name; ?></span>
                     </div>
@@ -121,7 +124,8 @@
             </div>
             <?php elseif ( $i === 2 ): ?>
             <div class="column is-one-quarter carousel-item">
-                <div class="carousel-item-content is-hidden-touch " data-post-id="<?php echo $post->ID; ?>">
+            <div class="carousel-item-navright is-hidden-desktop" data-post-id="<?php echo $post->ID; ?>"><i class="fas fa-2x fa-chevron-right"></i></div>
+                <div class="carousel-item-content is-hidden-touch" data-post-id="<?php echo $post->ID; ?>">
                     <div class="carousel-item-title"><?php the_title(); ?></div>
                     <span><? echo $segment->name; ?></span>
                 </div>

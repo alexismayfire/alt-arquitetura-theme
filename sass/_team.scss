@@ -2,14 +2,27 @@
   column-gap: 1em;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(192px, 1fr));
+  row-gap: 1em;
 
   background: linear-gradient(180deg, #fafafa 50%, $gray 50%);
   border-bottom: 3px solid rgba($primary, 0.2);
 
+  @include mobile {
+    background: none;
+    border-bottom: none;
+  }
+
   &-item {
     position: relative;
 
-    text-align: center;
+    @include mobile {
+      align-items: center;
+      display: flex;
+
+      &-meta {
+        margin-left: 1em;
+      }
+    }
 
     &-image {
       margin-bottom: 8px;
@@ -23,6 +36,7 @@
       font-size: 1em;
       font-weight: 600;
     }
+
     &-title {
       font-size: 0.75em;
       line-height: 1.5em;
