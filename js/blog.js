@@ -99,7 +99,7 @@ async function getPosts() {
 
 function infiniteScrollPosts(posts) {
   const wrapper = document.querySelector('.blog');
-  const options = { threshold: 1 };
+  const options = { threshold: 0.75 };
   window.observer = new IntersectionObserver(callback, options);
 
   let size = document.querySelectorAll('.blog-card').length;
@@ -117,12 +117,16 @@ function infiniteScrollPosts(posts) {
           const elem = createCard(post);
           wrapper.appendChild(elem);
         });
+
+        // Anima a entrada de cada elemento
         setTimeout(function () {
           document.querySelectorAll('.blog-card.fade-out').forEach((elem) => {
             elem.classList.add('fade-in');
-            elem.classList.remove('fade-out');
+            setTimeout(function () {
+              elem.classList.remove('fade-out');
+            }, 250);
           });
-        }, 500);
+        }, 250);
 
         // Atualização do osberver para o último elemento
         size = document.querySelectorAll('.blog-card').length;
