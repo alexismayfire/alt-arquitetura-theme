@@ -212,7 +212,7 @@ function scrollInit(evt) {
   const elem = document.querySelector('.navbar');
   const elemHeight = elem.getBoundingClientRect().height;
   const home = window.location.pathname === '/';
-  const container = document.querySelector('header ~ div');
+  const container = document.querySelector('header ~ main');
   if (elem) {
     if (isInViewport(elem) && !window.location.hash) {
       if (!home) {
