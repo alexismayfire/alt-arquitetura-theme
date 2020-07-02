@@ -32,6 +32,16 @@ function load_js() {
     wp_register_script( 'blog', get_template_directory_uri() . '/js/blog.js', array(), THEME_VERSION, true );
 }
 
+// Comments scripts, only in blog
+function load_comments_js() {
+    if ( is_singular() ) {
+        wp_enqueue_script('comment-reply');
+    }
+}
+
 add_action( 'wp_enqueue_scripts', 'load_js' );
+add_action( 'wp_enqueue_scripts', 'load_comments_js' );
+
+
 
 ?>
