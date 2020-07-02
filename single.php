@@ -14,9 +14,8 @@
         <div class="column is-full is-two-thirds-widescreen blog-post">
             <h1 class="title has-text-primary"><?php the_title(); ?></h1>
             <div class="blog-post-header">
-                <p class="is-inline"><?php echo get_the_date(); ?> | </p>
-                <?php get_template_part( 'template-parts/categories', 'links' ) ?>
-                <p class="has-text-weight-semibold"><?php the_author(); ?></p>
+                <p class="is-inline"><?php echo get_the_date(); ?> | <span class="has-text-weight-semibold"><?php the_author(); ?></span></p>
+                <p class="has-text-weight-semibold"><?php get_template_part( 'template-parts/categories', 'links' ) ?></p>
             </div>
             <div class="content">
                 <?php the_content(); ?>
