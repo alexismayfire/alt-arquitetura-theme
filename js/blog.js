@@ -4,6 +4,7 @@ async function restRequest(endpoint, callback) {
 }
 
 function getPostsInfo(res) {
+  console.log(res);
   return res.map((post) => ({
     id: post['id'],
     imgSrc: post['featured_image_src'][0],
@@ -32,29 +33,36 @@ function createCard(post) {
 
   const content = document.createElement('div');
   content.classList.add('blog-card-content');
+  const titleLink = document.createElement('a');
+  titleLink.classList.add('is-block');
+  titleLink.setAttribute('href', post.permalink);
   const title = document.createElement('h4');
   title.classList.add('blog-card-title');
   title.innerHTML = post.title;
-  content.appendChild(title);
+  titleLink.appendChild(title);
+  content.appendChild(titleLink);
 
-  const meta = document.createElement('span');
-  meta.classList.add('blog-card-meta');
-  meta.innerHTML = post.date + ' | ';
+  const metaDate = document.createElement('span');
+  metaDate.innerHTML = post.date;
+  const metaAuthor = document.createElement('span');
+  metaAuthor.classList.add('has-text-weight-semibold');
+  metaAuthor.innerHTML = post.author;
+  content.appendChild(metaDate);
+  content.innerHTML += ' | ';
+  content.appendChild(metaAuthor);
+
+  const metaCategories = document.createElement('span');
+  metaCategories.classList.add('is-block', 'has-text-weight-semibold', 'mb-4');
   post.categories.forEach((cat, index, arr) => {
     const node = document.createElement('a');
     node.setAttribute('href', cat.permalink);
     node.text = cat.name;
-    meta.appendChild(node);
+    metaCategories.appendChild(node);
     if (index + 1 < arr.length) {
-      meta.innerHTML += ', ';
+      metaCategories.innerHTML += ', ';
     }
   });
-  content.appendChild(meta);
-
-  const author = document.createElement('span');
-  author.classList.add('blog-card-author');
-  author.innerHTML = post.author;
-  content.appendChild(author);
+  content.appendChild(metaCategories);
 
   const excerpt = document.createElement('div');
   excerpt.classList.add('blog-card-excerpt');

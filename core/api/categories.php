@@ -22,7 +22,7 @@ function rest_get_categories( $object, $field_name, $request ) {
     foreach( $cats as $cat ) {
         array_push( $cats_obj, array( 
             'name' => $cat->name,
-            'permalink' => $base ? '/'.$base.$slug : '/'.$slug,
+            'permalink' => $base ? '/'.$base.'/'.$cat->slug : '/'.$cat->slug,
         ));
     }
 

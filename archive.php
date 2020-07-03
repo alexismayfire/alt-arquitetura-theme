@@ -11,23 +11,17 @@ $max_posts = get_option( 'posts_per_page' );
         </div>
         <div class="column is-four-fifths">
             <div class="blog" data-category-id="<?php the_category_ID( true ); ?>">
-            <?php if ( have_posts() ): while ( have_posts() && $i < $max_posts ): the_post(); $i++; ?>
-                <div class="blog-card" data-id="<?php $post->ID; ?>">
-                    <a href="<?php the_permalink(); ?>">
-                        <img class="blog-card-image" src="<?php the_post_thumbnail_url( 'blog-large' ); ?>" alt="<?php the_title(); ?>" />
-                    </a>
-                    <div class="blog-card-content">
-                        <h4 class="blog-card-title"><?php the_title(); ?></h4>
-                        <span class="blog-card-meta"><?php the_date(); ?> | <?php the_terms ( $post->ID, 'category' ); ?></span>
-                        <span class="blog-card-author"><?php the_author(); ?></span>
-                        
-                        <div class="blog-card-excerpt">
-                            <?php the_excerpt(); ?>
-                            <a class="button is-dark" href="<?php the_permalink(); ?>">Ler mais</a>
-                        </div>
-                    </div>
-                </div>
-            <?php endwhile; endif; ?>
+            <?php 
+                
+            if ( have_posts() ): 
+                while ( have_posts() && $i < $max_posts ): 
+                    the_post(); 
+                    $i++;
+                    get_template_part( 'template-parts/blog', 'card' );
+                endwhile; 
+            endif; 
+            
+            ?>
             </div>
         </div>
         <div class="column is-one-fifth blog-categories">

@@ -44,6 +44,7 @@ function projects_post_type() {
         'menu_icon' => 'dashicons-building',
         'show_ui' => true,
         'show_in_rest' => true,
+        'exclude_from_search' => true,
     );
     register_post_type( 'project', $args );
 }

@@ -163,6 +163,25 @@ $height: 35%;
   }
 }
 
+@include desktop {
+  .blog-categories .widget_categories:last-child {
+    display: none;
+  }
+}
+
+@include touch {
+  .blog-categories .widget_categories {
+    &:first-child,
+    &:last-child label {
+      display: none;
+    }
+
+    h4 {
+      font-size: 1em;
+    }
+  }
+}
+
 .comment {
   .depth-2,
   .depth-3,
