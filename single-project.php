@@ -7,9 +7,9 @@
         </div>
         <div class="column is-full">
             <ul class="project-detail">
-                <li><span>Cliente</span><strong><?php the_field( 'projeto_cliente');?></strong></li>
+                <li><span>Cliente</span><strong><?php the_field( 'projeto_cliente' );?></strong></li>
                 <li><span>Segmento</span><strong><?php $cat = get_the_terms( $post, 'segments' ); echo $cat[0]->name; ?></strong></li>
-                <li><span>Área Construída</span><strong><?php echo get_field( 'projeto_area') ? get_field( 'projeto_area' ).' m<sup>2</sup>' : '-' ; ?></strong></li>
+                <li><span>Área</span><strong><?php echo get_field( 'projeto_area') ? get_field( 'projeto_area' ).' m<sup>2</sup>' : '-' ; ?></strong></li>
                 <li><span>Status</span><strong><?php the_field( 'projeto_status');?></strong></li>
             </ul>
         </div>
