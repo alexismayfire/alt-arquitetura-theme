@@ -218,6 +218,19 @@ function toggleMenu() {
     home.querySelector('.hero-body').classList.toggle('is-invisible');
   }
   document.querySelector('main').classList.toggle('is-invisible');
+
+  window.isMenuOpen = !window.isMenuOpen;
+
+  if (window.isMenuOpen) {
+    window.currentScrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${window.scrollY}px`;
+  } else {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    window.scrollTo(0, window.currentScrollY || 0);
+    window.currentScrollY = 0;
+  }
 }
 
 function menuInit() {
@@ -294,6 +307,8 @@ function contactFormInit() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  window.isMenuOpen = false;
+  window.currentScrollY = 0;
   const { pathname, search } = window.location;
   const parts = pathname.split('/');
 
