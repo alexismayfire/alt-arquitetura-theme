@@ -1,0 +1,128 @@
+.navbar {
+  .container {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-menu {
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 1.2em;
+  }
+}
+
+.navbar.is-fixed-top {
+  background-color: #fafafa !important;
+  box-shadow: $box-shadow;
+  opacity: 0.9;
+
+  transition: all 300ms ease-in-out;
+}
+
+.nav-background {
+  background-color: #fafafa !important;
+  box-shadow: $box-shadow;
+  opacity: 0.9;
+
+  transition: all 300ms ease-in-out;
+}
+
+.navbar-social-container {
+  justify-content: space-evenly;
+
+  @include widescreen {
+    margin-left: 2em;
+  }
+}
+
+.navbar {
+  &-brand {
+    align-items: center;
+
+    img {
+      max-height: 120px;
+    }
+  }
+
+  &-menu {
+    @include desktop {
+      flex-grow: 0;
+    }
+  }
+
+  &-items-container {
+    display: flex;
+    justify-content: space-evenly;
+
+    .menu-item {
+      margin: 0 1em;
+
+      a {
+        color: $primary;
+        font-family: 'Apertura';
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 4px;
+        text-transform: lowercase;
+
+        @include mobile {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    .menu-item-icon {
+      margin: 0 0.5em;
+    }
+  }
+
+  &.is-open {
+    background-color: #fafafa;
+
+    .navbar-menu {
+      display: grid;
+      grid-template-columns: 1fr;
+      height: calc(100vh - 128px);
+
+      .navbar-items-container:not(.navbar-social-container) {
+        display: grid;
+        row-gap: 1em;
+      }
+    }
+
+    .navbar-burger {
+      span {
+        width: 20px;
+        transition: all 300ms ease-in-out;
+
+        &:nth-child(1),
+        &:nth-child(3) {
+          left: calc(50% - 10px);
+          top: 50%;
+        }
+
+        &:nth-child(1) {
+          transform: rotate(45deg);
+        }
+
+        &:nth-child(3) {
+          transform: rotate(-45deg);
+        }
+
+        &:nth-child(2) {
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  &-burger {
+    &:hover {
+      background-color: transparent;
+    }
+    span {
+      transition: all 300ms ease-in-out;
+    }
+  }
+}

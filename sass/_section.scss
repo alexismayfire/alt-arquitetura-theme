@@ -1,0 +1,43 @@
+.section {
+  &-title {
+    margin-bottom: 2rem;
+    max-width: 100%;
+    position: relative;
+    width: max-content;
+
+    background-color: $gray;
+    font-size: 4rem;
+    font-weight: 600;
+    line-height: 3rem;
+    padding: 2rem 2rem 2rem 0;
+    text-transform: lowercase;
+
+    @include mobile {
+      font-size: 2.5rem;
+      line-height: 2rem;
+    }
+
+    &-prepend {
+      display: block;
+
+      font-size: 2.5rem;
+      margin-top: -0.75rem;
+
+      @include mobile {
+        font-size: 1.5rem;
+        margin-top: -0.5rem;
+      }
+    }
+  }
+
+  &-title::before {
+    content: '';
+    height: 100%;
+    position: absolute;
+    left: -50vw;
+    top: 0;
+    width: 50vw;
+
+    background-color: $gray;
+  }
+}

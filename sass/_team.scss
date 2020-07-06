@@ -1,0 +1,75 @@
+.team {
+  column-gap: 1em;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(192px, 1fr));
+  row-gap: 1em;
+
+  background: linear-gradient(180deg, #fafafa 50%, $gray 50%);
+  border-bottom: 3px solid rgba($primary, 0.2);
+
+  @include mobile {
+    background: none;
+    border-bottom: none;
+  }
+
+  &-item {
+    position: relative;
+
+    @include mobile {
+      align-items: center;
+      display: flex;
+
+      &-meta {
+        margin-left: 1em;
+      }
+    }
+
+    &-image {
+      margin-bottom: 8px;
+      box-shadow: -2px 4px 8px rgba($primary, 0.2);
+    }
+
+    &-name {
+      display: block;
+      width: 100%;
+
+      font-size: 1em;
+      font-weight: 600;
+    }
+
+    &-title {
+      font-size: 0.75em;
+      line-height: 1.5em;
+    }
+  }
+
+  @media (min-width: 769px) {
+    position: relative;
+    margin-top: 6rem;
+
+    &::after {
+      content: '';
+      height: calc(50% + 3px);
+      left: 100%;
+      position: absolute;
+      top: 50%;
+      width: 50vw;
+
+      background-color: $gray;
+      border-bottom: 3px solid rgba($primary, 0.2);
+    }
+
+    &-item:nth-child(1),
+    &-item:nth-child(2) {
+      .team-item-name::after {
+        content: '';
+        height: 3rem;
+        position: absolute;
+        right: -11px;
+        width: 3px;
+
+        background-color: rgba($primary, 0.2);
+      }
+    }
+  }
+}

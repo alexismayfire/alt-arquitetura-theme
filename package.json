@@ -1,0 +1,26 @@
+{
+  "name": "alt-arquitetura-theme",
+  "version": "1.0.0",
+  "description": "Tema de WordPress para a ALT Arquitetura",
+  "main": "index.js",
+  "scripts": {
+    "css-build": "node-sass --omit-source-map-url sass/main.scss css/main.css",
+    "css-watch": "npm run css-build -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexismayfire/alt-arquitetura-theme.git"
+  },
+  "author": "Carlos Vieira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexismayfire/alt-arquitetura-theme/issues"
+  },
+  "homepage": "https://github.com/alexismayfire/alt-arquitetura-theme#readme",
+  "devDependencies": {
+    "node-sass": "^4.14.1"
+  },
+  "dependencies": {
+    "bulma": "^0.9.0"
+  }
+}

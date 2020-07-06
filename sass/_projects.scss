@@ -1,0 +1,144 @@
+.projects {
+  display: flex;
+  flex-flow: column wrap;
+  align-content: space-between;
+  counter-reset: items;
+
+  @include mobile {
+    height: auto !important;
+  }
+
+  @include desktop {
+    &::before,
+    &::after {
+      content: '';
+      flex-basis: 100%;
+      width: 0;
+      order: 2;
+    }
+
+    &-card:nth-child(3n + 1) {
+      order: 1;
+    }
+    &-card:nth-child(3n + 2) {
+      order: 2;
+    }
+    &-card:nth-child(3n + 3) {
+      order: 3;
+    }
+  }
+
+  &-card {
+    padding-bottom: 1em;
+    width: 100%;
+    height: auto;
+
+    @include desktop {
+      margin-right: 1em;
+      width: 33%;
+    }
+
+    a {
+      display: block;
+      position: relative;
+
+      line-height: 0;
+
+      figure {
+        background: $primary;
+
+        img {
+          width: 100%;
+
+          opacity: 1;
+          transition: all 300ms ease-in-out;
+        }
+      }
+
+      span {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+
+        color: $gray;
+        font-family: 'Montserrat';
+        font-size: 1.2em;
+        opacity: 0;
+        text-align: center;
+        transition: all 300ms ease-in-out;
+      }
+    }
+
+    a:hover {
+      img {
+        opacity: 0.2;
+      }
+      span {
+        opacity: 1;
+      }
+    }
+  }
+
+  &-categories {
+    align-items: center;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 2em;
+
+    @include mobile {
+      bottom: 0;
+      left: 0;
+      margin: 0 auto;
+      position: fixed;
+      width: 100%;
+      z-index: 20;
+
+      background-color: $gray;
+    }
+  }
+}
+
+.button-filter {
+  @extend .button;
+
+  position: relative;
+
+  background-color: $gray;
+  border: none;
+  font-family: 'Montserrat';
+
+  &:not(.is-active):hover {
+    background-color: $primary;
+    color: $gray;
+    transition: all 300ms ease-in-out;
+
+    &::after {
+      left: 0;
+      top: 0;
+
+      transition: all 300ms ease-in-out;
+    }
+  }
+
+  &:not(.is-active)::after {
+    content: '';
+    height: 100%;
+    left: -8px;
+    position: absolute;
+    top: 8px;
+    width: 100%;
+
+    border: 2px solid rgba($primary, 0.2);
+    transition: all 300ms ease-in-out;
+  }
+  &:focus:not(:active) {
+    box-shadow: 0 0 0 0.125em rgba($primary, 0.4);
+  }
+
+  &.is-active {
+    background-color: $primary;
+    color: $gray;
+    cursor: default;
+  }
+}

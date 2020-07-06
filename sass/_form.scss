@@ -1,0 +1,154 @@
+@import '../node_modules/bulma/sass/utilities/_all.sass';
+@import '../node_modules/bulma/sass/helpers/_all.sass';
+@import '../node_modules/bulma/sass/grid/_all.sass';
+
+.form-wrapper {
+  padding-top: 0;
+}
+
+form.wpcf7-form {
+  align-items: stretch;
+  display: flex !important;
+  flex-wrap: wrap;
+
+  @include mobile {
+    flex-direction: column;
+  }
+
+  p {
+    width: 100%;
+  }
+
+  .column {
+    padding-top: 0;
+  }
+
+  .button-column {
+    align-self: flex-end;
+    display: flex;
+    margin-top: 1em;
+    width: fit-content;
+  }
+
+  .field.is-full-height {
+    height: 100%;
+  }
+
+  .wpcf7-form-control-wrap {
+    display: block;
+    height: auto;
+
+    &::after {
+      content: '';
+      height: 100%;
+      left: -8px;
+      position: absolute;
+      top: 8px;
+      width: 100%;
+      z-index: 0;
+
+      border: 2px solid rgba($primary, 0.2);
+      transition: all 300ms ease-in-out;
+    }
+
+    &:hover,
+    &:focus,
+    &:focus-within,
+    &:active {
+      cursor: text;
+
+      &::after {
+        left: 0;
+        top: 0;
+
+        border: 2px solid rgba($primary, 0.7);
+        transition: all 300ms ease-in-out;
+      }
+    }
+
+    &:focus,
+    &:active {
+      &::after {
+        left: 0;
+        top: 0;
+
+        border: 2px solid $primary;
+        transition: all 300ms ease-in-out;
+      }
+    }
+  }
+}
+
+span.wpcf7-not-valid-tip {
+  margin-top: 0.75em;
+
+  font-size: 0.75em;
+}
+
+div.wpcf7-validation-errors {
+  @extend .has-background-warning-light;
+
+  border: 1px solid darken($warning, 5%);
+}
+
+div.wpcf7-mail-sent-ng,
+div.wpcf7-aborted {
+  @extend .has-background-danger-light;
+
+  border: 1px solid darken($red, 5%);
+}
+
+.wpcf7-response-output {
+  @extend .is-full;
+
+  font-size: 0.8em;
+  padding: 1em !important;
+
+  .wpcf7-display-none {
+    @extend .is-hidden;
+  }
+}
+
+.wpcf7-submit {
+  height: 3em;
+  font-weight: 800;
+  text-transform: uppercase;
+
+  svg {
+    margin-left: 0.5em;
+  }
+}
+
+.tooltip {
+  &:hover {
+    .tooltip-content {
+      visibility: visible;
+    }
+  }
+
+  &-content {
+    bottom: 32px;
+    left: -100px;
+    position: absolute;
+    visibility: hidden;
+    width: 232px;
+    z-index: 10;
+
+    background-color: $primary;
+    color: $gray;
+    line-height: 1.2rem;
+
+    &::after {
+      content: '';
+      height: 0;
+      left: calc(50% - 1.25rem);
+      position: absolute;
+      top: 100%;
+      width: 0;
+
+      border-left: 0.75rem solid transparent;
+      border-right: 0.75rem solid transparent;
+      border-top: 0.75rem solid $primary;
+    }
+  }
+}
