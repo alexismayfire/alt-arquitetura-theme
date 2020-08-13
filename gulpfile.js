@@ -39,7 +39,7 @@ function jsTask() {
   */
   return src('js/main.js')
     .pipe(named())
-    .pipe(webpack({ devtool: 'eval-source-map' }))
+    .pipe(webpack({ devtool: 'source-map' }))
     .pipe(dest('dist/js'));
 }
 
