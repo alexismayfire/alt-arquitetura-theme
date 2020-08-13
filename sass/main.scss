@@ -1,26 +1,10 @@
+// 242 kb / 32.7 kb
+
 @charset "utf-8";
 
 @font-face {
   font-family: 'Apertura';
-  src: url('../fonts/Apertura-Regular.ttf') format('truetype'),
-    url('../fonts/Apertura-Black.otf') format('opentype'),
-    url('../fonts/Apertura-Medium.otf') format('opentype'),
-    url('../fonts/Apertura-Bold.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Apertura Black';
-  src: url('../fonts/Apertura-Black.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Apertura Medium';
-  src: url('../fonts/Apertura-Medium.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Apertura Bold';
-  src: url('../fonts/Apertura-Bold.otf') format('opentype');
+  src: url('../../fonts/Apertura-Regular.ttf') format('truetype');
 }
 
 $radius: 0px;
@@ -31,10 +15,29 @@ $input-background-color: $gray !default;
 $input-focus-border-color: $primary !default;
 $input-focus-box-shadow-color: bulmaRgba($primary, 0.25) !default;
 
-@import '../node_modules/bulma/bulma.sass';
+@import '../node_modules/bulma/sass/utilities/_all.sass';
+@import '../node_modules/bulma/sass/base/_all.sass';
+@import '../node_modules/bulma/sass/elements/button.sass';
+@import '../node_modules/bulma/sass/elements/container.sass';
+@import '../node_modules/bulma/sass/elements/content.sass';
+@import '../node_modules/bulma/sass/elements/icon.sass';
+@import '../node_modules/bulma/sass/elements/image.sass';
+@import '../node_modules/bulma/sass/elements/title.sass';
+@import '../node_modules/bulma/sass/form/shared.sass';
+@import '../node_modules/bulma/sass/form/input-textarea.sass';
+@import '../node_modules/bulma/sass/form/select.sass';
+@import '../node_modules/bulma/sass/form/tools.sass';
+@import '../node_modules/bulma/sass/components/media.sass';
+@import '../node_modules/bulma/sass/components/menu.sass';
+@import '../node_modules/bulma/sass/components/navbar.sass';
+@import '../node_modules/bulma/sass/grid/columns.sass';
+@import '../node_modules/bulma/sass/helpers/_all.sass';
+@import '../node_modules/bulma/sass/layout/_all.sass';
+
+$box-shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1),
+  0 0px 0 1px rgba($scheme-invert, 0.02) !default;
 
 #home {
-  background-image: url('/images/bg-4.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
@@ -144,7 +147,7 @@ select {
   }
 }
 
-.slide-out-left {
+.slide-left-out {
   div,
   span,
   img,
@@ -156,7 +159,7 @@ select {
   }
 }
 
-.slide-out-right {
+.slide-right-out {
   div,
   span,
   img,
@@ -168,6 +171,18 @@ select {
   }
 }
 
+.slide-down-out {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    display: block;
+    transform: translateY(100%);
+    transition: all 300ms ease-in-out;
+  }
+}
+
 .slide-in {
   div,
   span,
@@ -175,7 +190,7 @@ select {
   a,
   h4 {
     display: block;
-    transform: translateX(0);
+    transform: translate(0, 0);
     transition: all 300ms ease-in-out;
   }
 }
