@@ -63,20 +63,18 @@ function custom_sidebars() {
 }
 add_action( 'widgets_init', 'custom_sidebars' );
 
+// Posts action
+function query_all_posts( $query ) {
+    if ( ! is_admin() && $query->is_main_query() ) {
+        if ( is_archive() || is_category() || is_home() || is_search() ) {
+            $query->set( 'posts_per_page', -1 );
+        }
+    }
+}
+add_action( 'pre_get_posts', 'query_all_posts' );
+
 // Plugins
 add_filter( 'wpcf7_autop_or_not', '__return_false' );
-
-add_action( 'wp_head', function() { ?>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170483133-1"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-170483133-1');
-    </script>
-<?php } );
 
 // Load template tags
 require_once get_template_directory() . '/template-tags.php';
