@@ -12,6 +12,7 @@ const uglify = require('gulp-uglify');
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
+const purify = require('gulp-purifycss');
 
 // File paths
 const files = {
@@ -21,9 +22,37 @@ const files = {
 
 // Sass task: compiles the style.scss file into style.css
 function scssTask() {
+  const purifyOptions = {
+    whitelist: [
+      '*wpcf7*',
+      '*svg*',
+      '*wp-block-gallery*',
+      '*wp-block-column*',
+      '*wp-block-image*',
+      '*blocks-gallery-grid*',
+      '*content*',
+      '*widget_categories*',
+      '*comment*',
+      '*slide-down-out*',
+      '*ol*',
+      '*dl*',
+      '*dt*',
+      '*dd*',
+      '*blockquote*',
+      '*iframe*',
+      '*video*',
+      '*table*',
+      '*td*',
+      '*th*',
+      '*aside*',
+      '*code*',
+    ],
+  };
+
   return src(files.scssPath)
     .pipe(sourcemaps.init()) // initialize sourcemaps first
     .pipe(sass()) // compile SCSS to CSS
+    .pipe(purify(['**/*.php', 'js/*.js'], purifyOptions))
     .pipe(postcss([autoprefixer(), cssnano()])) // PostCSS plugins
     .pipe(sourcemaps.write('.')) // write sourcemaps file in current directory
     .pipe(dest('dist/css')); // put final CSS in dist folder

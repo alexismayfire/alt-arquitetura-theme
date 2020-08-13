@@ -5,10 +5,64 @@ body {
   line-height: 150%;
 }
 
+main.container {
+  margin-top: 1rem;
+}
+
+.section {
+  padding: 6em 1.5em 3em 1.5em;
+
+  @include mobile {
+    padding-top: 4.5em;
+  }
+}
+
+.is-flex.is-vcentered {
+  align-items: center;
+}
+
+.no-horizontal-padding > .column {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 p {
   margin-bottom: 16px;
 }
 
+a {
+  color: rgba($primary, 0.6);
+}
+
 .textarea {
   resize: none;
+}
+
+input,
+select,
+textarea {
+  font-family: 'Montserrat';
+}
+
+select {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.input,
+.textarea {
+  padding: 1.5em 1em;
+  resize: none;
+
+  // TODO: forçando pelo z-index, tentar focus pelo JS?
+  @include mobile {
+    z-index: 10;
+
+    background-color: rgba($gray, 0.7);
+  }
+}
+
+.select {
+  align-items: center;
+  display: flex;
 }
