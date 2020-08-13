@@ -8,5 +8,5 @@
     <?php get_template_part( 'template-parts/home', 'projects' ); ?>
     <?php get_template_part( 'template-parts/home', 'contact' ); ?>
 </main>
-<?php endwhile; else: endif; ?>
+<?php endwhile; endif; ?>
 <?php get_footer(); ?>

@@ -11,12 +11,21 @@
     <?php
 
     $projects = get_field('projetos_itens');
+    $featured_projects = [];
     $i = 0;
 
     if ( $projects ): foreach ( $projects as $post ):
         $terms = get_the_terms( $post->ID, 'segments' );
         $segment = array_shift( $terms );
         $permalink = get_permalink( $post->ID );
+
+        $featured_projects[] = array(
+            'id' => $post->ID,
+            'title' => get_the_title(),
+            'segment' => $segment->name,
+            'image' => get_the_post_thumbnail_url( $post->ID, 'project-large' ),
+            'slug' => $permalink,
+        );
 
         if ( $i === 0): ?>
             <div class="column is-one-quarter carousel-item">
@@ -48,6 +57,7 @@
             </div>
             <a href="/projetos" class="button is-dark">Ver Todos <i class="fas fa-md fa-chevron-right"></i></a>
         </div>
-        <?php else: break; endif; $i++; ?>
+        <?php else: endif; $i++; ?>
     <?php endforeach; wp_reset_postdata(); endif; ?>
+    <?php wp_localize_script( 'main', 'featuredProjects', $featured_projects ); ?>
 </section>
