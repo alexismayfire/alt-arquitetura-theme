@@ -25,8 +25,8 @@ add_theme_support(
 // Menus
 register_nav_menus( 
     array(
-        'top-menu' => 'Menu Desktop',
-        'mobile-menu' => 'Menu Mobile',
+        'main' => 'Menu Principal',
+        'social-networks' => 'Redes Sociais',
     )
 );
 
