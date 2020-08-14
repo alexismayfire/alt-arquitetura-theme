@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "css-build": "node-sass --omit-source-map-url sass/main.scss css/main.css",
-    "css-watch": "npm run css-build -- --watch"
+    "css-watch": "npm run css-build -- --watch",
+    "js-watch": "watchify js/main.js -o js/main.min.js",
+    "build-css": "npm run css-build && uglifycss --output css/main.min.css css/main.css",
+    "build-js": "uglifyjs --compress --mangle -- js/main.min.js",
+    "purify": "node js/purify.js"
   },
   "repository": {
     "type": "git",
@@ -18,9 +22,31 @@
   },
   "homepage": "https://github.com/alexismayfire/alt-arquitetura-theme#readme",
   "devDependencies": {
-    "node-sass": "^4.14.1"
+    "@babel/core": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "autoprefixer": "^9.8.4",
+    "babel-preset-es2015": "^6.24.1",
+    "browserify": "^16.5.1",
+    "cssnano": "^4.1.10",
+    "gulp-concat": "^2.6.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-purifycss": "^0.2.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "node-html-parser": "^1.2.20",
+    "node-sass": "^4.14.1",
+    "purify-css": "^1.2.5",
+    "uglify-js": "^3.10.0",
+    "uglifycss": "^0.0.29",
+    "vinyl-named": "^1.1.0",
+    "watchify": "^3.11.1",
+    "webpack-stream": "^5.2.1"
   },
   "dependencies": {
-    "bulma": "^0.9.0"
+    "bulma": "^0.9.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-uglify": "^3.0.2"
   }
 }

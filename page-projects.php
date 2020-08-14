@@ -12,11 +12,11 @@ $cat_args = array(
 );
 
 $terms = get_terms( 'segments', $cat_args );        
-wp_localize_script( 'projects', 'categories', $terms );
+wp_localize_script( 'main', 'categories', $terms );
 
 ?>
 
-<main class="container">
+<main class="container" id="projects">
     <section class="section columns is-variable is-6 is-multiline">
         <div class="column is-half">
             <h1 class="section-title"><?php echo the_title() ?></h1>
@@ -25,10 +25,10 @@ wp_localize_script( 'projects', 'categories', $terms );
             <span>Filtrar por:</span>
             <button class="button-filter is-active is-hidden-touch">Todos</button>
         <?php foreach( $terms as $taxonomy ): ?>
-            <button disabled class="button-filter is-hidden-touch" data-segment="<?php echo $taxonomy->term_id; ?>"><?php echo $taxonomy->name; ?></button>
+            <button class="button-filter is-hidden-touch" data-segment="<?php echo $taxonomy->term_id; ?>"><?php echo $taxonomy->name; ?></button>
         <?php endforeach; ?>
             <div class="select is-hidden-desktop">
-                <select name="categories" disabled>
+                <select name="categories">
                     <option value="">Todos</option>
                 <?php foreach( $terms as $taxonomy ): ?>
                     <option value="<?php echo $taxonomy->term_id; ?>"><?php echo $taxonomy->name; ?></option>
@@ -39,7 +39,7 @@ wp_localize_script( 'projects', 'categories', $terms );
         <?php 
         $args = array(
             'post_type' => 'project',
-            'posts_per_page' => 6,
+            'posts_per_page' => -1,
         );
         $the_query = new WP_Query( $args );
         $i = 0;
@@ -50,7 +50,7 @@ wp_localize_script( 'projects', 'categories', $terms );
         );
         $height = 0;
 
-        if ( $the_query->have_posts() ):
+        if ( $the_query->have_posts() && $i < 6 ):
             foreach( $the_query->posts as $post ):
                 $img_id = get_post_thumbnail_id();
                 $feat_img_array = wp_get_attachment_image_src( $img_id, 'full' );
@@ -69,22 +69,51 @@ wp_localize_script( 'projects', 'categories', $terms );
         $i = 0;
         ?>
         <div class="column is-full projects" style="height: <?php echo $height.'px'; ?>;">
-        <?php if ( $the_query->have_posts() ): while ( $the_query->have_posts() && $i < 6 ): $the_query->the_post(); ?>
+        <?php 
+        $projects = [];
+        if ( $the_query->have_posts() ): 
+            while ( $the_query->have_posts() ): 
+                $the_query->the_post();
+
+                $title = $post->post_title;
+                // TODO: match segments to previous query of posts that belongs to this term?
+                $segments = [];
+                foreach( get_the_terms( $post->ID, 'segments' ) as $segment ):
+                    $segments[] = $segment->term_id;
+                endforeach;
+                $permalink = get_the_permalink( $post->ID );
+                $img_id = get_post_thumbnail_id();
+                $feat_img_array = wp_get_attachment_image_src( $img_id, 'full' );
+                $orient = $feat_img_array[1] > $feat_img_array[2] ? 'landscape' : 'portrait';
+                $feat_img = wp_get_attachment_image_src( $img_id, 'project-'.$orient );
+
+                $projects[] = array(
+                    'id' => $post->ID,
+                    'title' => $title,
+                    'segment' => $segments,
+                    'permalink' => $permalink,
+                    'imgSrc' => $feat_img[0],
+                    'imgWidth' => $feat_img[1],
+                    'imgHeight' => $feat_img[2],
+                );
+
+                if ( $i < 6 ):
+        ?>
             <div class="projects-card" data-id="<?php echo $post->ID; ?>">
-                <a href="<?php the_permalink(); ?>">
+                <a href="<?php echo $permalink; ?>">
                     <figure>
-                        <?php 
-                        $img_id = get_post_thumbnail_id();
-                        $feat_img_array = wp_get_attachment_image_src( $img_id, 'full' );
-                        $orient = $feat_img_array[1] > $feat_img_array[2] ? 'landscape' : 'portrait';
-                        $feat_img = wp_get_attachment_image_src( $img_id, 'project-'.$orient );
-                        ?>
-                        <img src="<?php echo $feat_img[0]; ?>" alt="<?php the_title(); ?>"/>
+                        <img src="<?php echo $feat_img[0]; ?>" alt="<?php echo $title; ?>"/>
                     </figure>
-                    <span><?php the_title(); ?></span>
+                    <span><?php echo $title; ?></span>
                 </a>
             </div>
-        <?php $i++; endwhile; else: endif; wp_enqueue_script( 'projects' ); ?>
+        <?php 
+                endif;
+                $i++;
+            endwhile; 
+        endif;
+        wp_localize_script( 'main', 'projects', $projects );
+        ?>
         </div>
     </section>
 </main>

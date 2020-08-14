@@ -1,22 +1,16 @@
-async function restRequest(endpoint, callback) {
-  const req = await fetch(`${restApi.url}${endpoint}`);
-  return await req.json().then((res) => callback(res));
+import animate from './animations';
+import { isMobile, qs, qsAll } from './utils';
+
+function getWrapper() {
+  return qs('.projects');
 }
 
-function isDesktop() {
-  return window.innerWidth > 968;
+function getCards() {
+  return qsAll('.projects-card');
 }
 
-function getProjectsInfo(res) {
-  return res.map((project) => ({
-    id: project['id'],
-    title: project['title']['rendered'],
-    segment: project['segments'][0],
-    permalink: project['link'],
-    imgSrc: project['featured_image_src'][0],
-    imgWidth: project['featured_image_src'][1],
-    imgHeight: project['featured_image_src'][2],
-  }));
+function getAddedCards(wrapper) {
+  return wrapper.querySelectorAll('.fade-out');
 }
 
 function createCard({ id, title, permalink, imgSrc }) {
@@ -24,52 +18,21 @@ function createCard({ id, title, permalink, imgSrc }) {
   elem.classList.add('projects-card', 'fade-out');
   elem.dataset.id = id;
 
-  const anchor = document.createElement('a');
-  anchor.setAttribute('href', permalink);
-  const figure = document.createElement('figure');
-
-  const img = document.createElement('img');
-  img.setAttribute('src', imgSrc);
-
-  const span = document.createElement('span');
-  span.innerHTML = title;
-
-  figure.appendChild(img);
-  anchor.appendChild(figure);
-  anchor.append(span);
-  elem.appendChild(anchor);
+  const html = `
+    <a href="${permalink}">
+      <figure>
+        <img src="${imgSrc}" alt=${title} />
+      </figure>
+      <span>${title}</span>
+    </a>
+  `;
+  elem.innerHTML = html.trim();
 
   return elem;
 }
 
-function animateCards(wrapper) {
-  wrapper.querySelectorAll('.fade-out').forEach((card) => {
-    card.classList.add('fade-in');
-    setTimeout(function () {
-      card.classList.remove('fade-out');
-    }, 250);
-  });
-}
-
-async function getProjects() {
-  const fields = [
-    'id',
-    'title',
-    'link',
-    'segments',
-    'featured_media',
-    'featured_image_src',
-    'type',
-  ].join('&_fields[]=');
-  const projects = await restRequest(
-    `wp/v2/project?per_page=100&_fields[]=${fields}`,
-    getProjectsInfo,
-  );
-  window.allProjects = projects;
-}
-
 async function getColumnResizeOptions() {
-  const cards = document.querySelectorAll('.projects-card');
+  const cards = getCards();
   const sizes = { 0: 0, 1: 0, 2: 0 };
   const promises = [];
 
@@ -111,7 +74,7 @@ async function getColumnResizeOptions() {
 }
 
 function getCardMaxHeight(projects) {
-  const wrapper = document.querySelector('.projects');
+  const wrapper = getWrapper();
   // Pegamos a largura para obter o ratio de redução de cada imagem
   const wrapperWidth = wrapper.getBoundingClientRect().width;
   // 1.5em padding + 2em margins
@@ -133,26 +96,26 @@ function getCardMaxHeight(projects) {
   return maxHeight;
 }
 
-async function getNextObserver(cards) {
-  if (isDesktop()) {
-    const size = cards.length;
+async function getNextObserver() {
+  const cards = getCards();
+
+  if (!isMobile()) {
     const { containerHeight, observerColumn } = await getColumnResizeOptions();
-    const wrapper = document.querySelector('.projects');
     // Aumentamos o container antes de inserir os elementos no DOM
+    const wrapper = getWrapper();
     wrapper.style.height = `${containerHeight + 48}px`;
     // Retornamos o último elemento da coluna com menor altura
-    lastCard = cards[size - observerColumn];
-  } else {
-    // No mobile, sempre vai ser a última
-    lastCard = document.querySelector('.projects-card:last-child');
+    return cards[cards.length - observerColumn];
   }
 
-  return lastCard;
+  // No mobile, sempre vai ser a última
+  return cards[cards.length - 1];
 }
 
-async function loadMore(projects) {
-  const wrapper = document.querySelector('.projects');
-  cards = document.querySelectorAll('.projects-card');
+async function loadMore(projects, lastCard) {
+  const wrapper = getWrapper();
+  let cards = getCards();
+
   const projToAdd = projects.slice(cards.length, cards.length + 3);
   if (!projToAdd.length) {
     // Nenhum item para adicionar, só remove o Observer
@@ -160,7 +123,7 @@ async function loadMore(projects) {
     return;
   }
 
-  if (isDesktop()) {
+  if (!isMobile()) {
     // Ajusta a altura do container antes de adicionar ao DOM
     // Aqui, será calculado com valores proporcionais!
     const maxHeight = getCardMaxHeight(projToAdd);
@@ -170,39 +133,36 @@ async function loadMore(projects) {
   }
 
   projToAdd.forEach((proj) => wrapper.appendChild(createCard(proj)));
+  const addedCards = getAddedCards(wrapper);
 
   // Animação dos elementos entrando
   setTimeout(function () {
-    animateCards(wrapper);
+    animate.scale(addedCards, 'in');
   }, 250);
 
   // Atualização do observer para o último elemento
-  cards = document.querySelectorAll('.projects-card');
   window.observer.unobserve(lastCard);
 
-  if (cards.length < projects.length) {
-    lastCard = await getNextObserver(cards);
-    window.observer.observe(lastCard);
-  } else if (isDesktop()) {
+  if (cards.length + projToAdd.length < projects.length) {
+    const newlastCard = await getNextObserver();
+    window.observer.observe(newlastCard);
+  } else if (!isMobile()) {
     // Se não tem mais elementos pra carregar, faz um último ajuste fino
     const { containerHeight } = await getColumnResizeOptions();
-    const wrapper = document.querySelector('.projects');
     wrapper.style.height = `${containerHeight + 24}px`;
   }
 }
 
 async function infiniteScrollProjects(projects) {
-  const options = { threshold: 1 };
-  window.observer = new IntersectionObserver(callback, options);
+  const lastCard = await getNextObserver();
 
-  let cards = document.querySelectorAll('.projects-card');
-  let lastCard = await getNextObserver(cards);
+  window.observer = new IntersectionObserver(callback, { threshold: 1 });
   window.observer.observe(lastCard);
 
   function callback(entries) {
     entries.forEach((entry) => {
       if (entry.isIntersecting && lastCard.id === entry.target.id) {
-        loadMore(projects);
+        loadMore(projects, lastCard);
       }
     });
   }
@@ -211,23 +171,22 @@ async function infiniteScrollProjects(projects) {
 function projectsFilterBySegment(segment) {
   // Filtrando os projetos de acordo com o botão escolhido
   const projects = segment
-    ? window.allProjects.filter((proj) => proj.segment === segment)
-    : window.allProjects;
+    ? window.projects.filter((proj) => proj.segment.includes(segment))
+    : window.projects;
 
   // Removemos o handler pra evitar possíveis bugs
   window.observer.disconnect();
 
-  const wrapper = document.querySelector('.projects');
+  const wrapper = getWrapper();
+  let cards = getCards();
   // Adiciona a animação antes da remoção
-  wrapper
-    .querySelectorAll('.projects-card')
-    .forEach((card) => card.classList.add('fade-out'));
+  cards.forEach((card) => card.classList.add('fade-out'));
 
   setTimeout(function () {
     // A remoção fica dentro do setTimeout, para ter uma transição mais suave
-    wrapper.querySelectorAll('.projects-card').forEach((card) => card.remove());
+    cards.forEach((card) => card.remove());
 
-    if (isDesktop()) {
+    if (!isMobile()) {
       // Aqui, vamos calcular, para os elementos de entrada, a altura da
       // primeira e segunda linha, de forma proporcional
       // Precisamos inicializar novamente o height do container:
@@ -240,44 +199,42 @@ function projectsFilterBySegment(segment) {
     const initialProjects = projects.slice(0, 6);
     // Agora podemos adicionar os cards iniciais, sem quebrar o layout
     initialProjects.forEach((proj) => wrapper.appendChild(createCard(proj)));
-    animateCards(wrapper);
 
+    cards = getCards();
+    setTimeout(function () {
+      animate.scale(cards, 'in');
+    }, 250);
     infiniteScrollProjects(projects);
   }, 250);
 }
 
 function projectsButtonFilterListener(evt) {
-  const current = document.querySelector('.button-filter.is-active');
+  evt.preventDefault();
+  const { target } = evt;
+  const current = qs('.button-filter.is-active');
   current.addEventListener('click', projectsButtonFilterListener);
   current.classList.remove('is-active');
 
-  evt.target.removeEventListener('click', projectsButtonFilterListener);
-  evt.target.classList.add('is-active');
+  target.removeEventListener('click', projectsButtonFilterListener);
+  target.classList.add('is-active');
 
-  const segment = parseInt(evt.target.dataset.segment, 10);
-  projectsFilterBySegment(segment);
-}
-
-function projectsSelectFilterListener(evt) {
-  evt.preventDefault();
-  projectsFilterBySegment(parseInt(evt.target.value, 10));
-}
-
-function projectsFilter() {
-  const btns = document.querySelectorAll('.button-filter:not(.is-active)');
-  btns.forEach((elem) => {
-    elem.disabled = false;
-    elem.addEventListener('click', projectsButtonFilterListener);
-  });
-  const select = document.querySelector('select[name=categories]');
-  select.disabled = false;
-  select.addEventListener('change', projectsSelectFilterListener);
+  projectsFilterBySegment(parseInt(target.dataset.segment, 10));
 }
 
 async function projectsInit() {
-  await getProjects();
-  infiniteScrollProjects(window.allProjects);
-  projectsFilter();
+  infiniteScrollProjects(window.projects);
+
+  // Set filters
+  const btns = qsAll('.button-filter:not(.is-active)');
+  btns.forEach((elem) => {
+    elem.addEventListener('click', projectsButtonFilterListener);
+  });
+
+  const select = qs('select[name=categories]');
+  select.addEventListener('change', function (evt) {
+    evt.preventDefault();
+    projectsFilterBySegment(parseInt(evt.target.value, 10));
+  });
 }
 
-document.addEventListener('DOMContentLoaded', projectsInit);
+export default projectsInit;

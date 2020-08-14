@@ -1,26 +1,11 @@
+// 242 kb / 32.7 kb
+
 @charset "utf-8";
 
 @font-face {
   font-family: 'Apertura';
-  src: url('../fonts/Apertura-Regular.ttf') format('truetype'),
-    url('../fonts/Apertura-Black.otf') format('opentype'),
-    url('../fonts/Apertura-Medium.otf') format('opentype'),
-    url('../fonts/Apertura-Bold.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Apertura Black';
-  src: url('../fonts/Apertura-Black.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Apertura Medium';
-  src: url('../fonts/Apertura-Medium.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Apertura Bold';
-  src: url('../fonts/Apertura-Bold.otf') format('opentype');
+  font-display: swap;
+  src: url('../../fonts/Apertura-Regular.ttf') format('truetype');
 }
 
 $radius: 0px;
@@ -31,18 +16,27 @@ $input-background-color: $gray !default;
 $input-focus-border-color: $primary !default;
 $input-focus-box-shadow-color: bulmaRgba($primary, 0.25) !default;
 
-@import '../node_modules/bulma/bulma.sass';
+@import '../node_modules/bulma/sass/utilities/_all.sass';
+@import '../node_modules/bulma/sass/base/_all.sass';
+@import '../node_modules/bulma/sass/elements/button.sass';
+@import '../node_modules/bulma/sass/elements/container.sass';
+@import '../node_modules/bulma/sass/elements/content.sass';
+@import '../node_modules/bulma/sass/elements/icon.sass';
+@import '../node_modules/bulma/sass/elements/image.sass';
+@import '../node_modules/bulma/sass/elements/title.sass';
+@import '../node_modules/bulma/sass/form/shared.sass';
+@import '../node_modules/bulma/sass/form/input-textarea.sass';
+@import '../node_modules/bulma/sass/form/select.sass';
+@import '../node_modules/bulma/sass/form/tools.sass';
+@import '../node_modules/bulma/sass/components/media.sass';
+@import '../node_modules/bulma/sass/components/menu.sass';
+@import '../node_modules/bulma/sass/components/navbar.sass';
+@import '../node_modules/bulma/sass/grid/columns.sass';
+@import '../node_modules/bulma/sass/helpers/_all.sass';
+@import '../node_modules/bulma/sass/layout/_all.sass';
 
-#home {
-  background-image: url('/images/bg-4.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-
-  @include mobile {
-    background-size: auto 100vh;
-  }
-}
+$box-shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1),
+  0 0px 0 1px rgba($scheme-invert, 0.02) !default;
 
 @import './navbar.scss';
 
@@ -55,153 +49,20 @@ $input-focus-box-shadow-color: bulmaRgba($primary, 0.25) !default;
 @import './project.scss';
 @import './blog.scss';
 
-body {
-  overflow: hidden;
+@import './base.scss';
+@import './animations.scss';
 
-  background-color: #fafafa;
-  font-family: Montserrat, sans-serif;
-  font-size: 18px;
-  line-height: 150%;
-}
-
-p {
-  margin-bottom: 16px;
-}
-
-a {
-  color: rgba($primary, 0.6);
-}
-
-main.container {
-  margin-top: 1rem;
-}
-
-.is-flex.is-vcentered {
-  align-items: center;
-}
-
-input,
-select,
-textarea {
-  font-family: 'Montserrat';
-}
-
-select {
-  padding-bottom: 0;
-  padding-top: 0;
-}
-
-.input,
-.textarea {
-  padding: 1.5em 1em;
-  resize: none;
-
-  // TODO: forçando pelo z-index, tentar focus pelo JS?
-  @include mobile {
-    z-index: 10;
-
-    background-color: rgba($gray, 0.7);
-  }
-}
-
-.select {
-  align-items: center;
-  display: flex;
-}
-
-.no-horizontal-padding > .column {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.section {
-  padding: 6em 1.5em 3em 1.5em;
+#home {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 
   @include mobile {
-    padding-top: 4.5em;
+    background-size: auto 100vh;
   }
 }
 
-.fade-in {
-  div,
-  span,
-  img,
-  a,
-  h4 {
-    opacity: 1;
-    transition: all 300ms ease-in-out;
-  }
-}
-
-.fade-out {
-  div,
-  span,
-  img,
-  a,
-  h4 {
-    opacity: 0;
-    transition: all 300ms ease-in-out;
-  }
-}
-
-.slide-out-left {
-  div,
-  span,
-  img,
-  a,
-  h4 {
-    display: block;
-    transform: translateX(-100%);
-    transition: all 300ms ease-in-out;
-  }
-}
-
-.slide-out-right {
-  div,
-  span,
-  img,
-  a,
-  h4 {
-    display: block;
-    transform: translateX(100%);
-    transition: all 300ms ease-in-out;
-  }
-}
-
-.slide-in {
-  div,
-  span,
-  img,
-  a,
-  h4 {
-    display: block;
-    transform: translateX(0);
-    transition: all 300ms ease-in-out;
-  }
-}
-
-.scale-out {
-  div,
-  img,
-  a {
-    transform: scale(0.5);
-    transition: all 300ms ease-in-out;
-  }
-}
-
-.scale-in {
-  img,
-  a {
-    transform: scale(1);
-    transition: all 300ms ease-in-out;
-  }
-}
-
-.home-cta-title {
-  font-family: 'Apertura';
-  text-transform: lowercase;
-}
-
+.home-cta-title,
 .home-cta-tagline {
   font-family: 'Apertura';
   text-transform: lowercase;

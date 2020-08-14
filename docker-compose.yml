@@ -5,7 +5,7 @@ web:
   environment:
     - WORDPRESS_DB_PASSWORD=password
   ports:
-    - '8080:80'
+    - '80:80'
   volumes:
     - .:/var/www/html/wp-content/themes/alt-arquitetura
     - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini

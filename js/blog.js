@@ -1,20 +1,9 @@
-async function restRequest(endpoint, callback) {
-  const req = await fetch(`${restApi.url}${endpoint}`);
-  return await req.json().then((res) => callback(res));
-}
+import { qs, qsAll } from './utils';
 
-function getPostsInfo(res) {
-  console.log(res);
-  return res.map((post) => ({
-    id: post['id'],
-    imgSrc: post['featured_image_src'][0],
-    title: post['title']['rendered'],
-    date: post['formatted_date'],
-    categories: post['categories_details'],
-    author: post['author_name'],
-    excerpt: post['excerpt']['rendered'],
-    permalink: post['link'],
-  }));
+function createCategories(categories) {
+  return categories
+    .map((cat) => `<a href="${cat.permalink}">${cat.name}</a>`)
+    .join(', ');
 }
 
 function createCard(post) {
@@ -22,113 +11,56 @@ function createCard(post) {
   elem.classList.add('blog-card', 'fade-out');
   elem.dataset.id = post.id;
 
-  const imgAnchor = document.createElement('a');
-  imgAnchor.setAttribute('href', post.permalink);
-  const img = document.createElement('img');
-  img.classList.add('blog-card-image');
-  img.setAttribute('src', post.imgSrc);
-  img.setAttribute('alt', post.title);
-  imgAnchor.appendChild(img);
-  elem.appendChild(imgAnchor);
+  const html = `
+    <a href="${post.permalink}">
+      <img class="blog-card-image" src="${post.imgSrc}" alt="${post.title}" />
+    </a>
+    <div class="blog-card-content">
+      <a class="is-block" href="${post.permalink}">
+        <h4 class="blog-card-title">${post.title}</h4>
+      </a>
+      <span>${post.date}</span> | 
+      <span class="has-text-weight-semibold">${post.author}</span>
+      <span class="is-block has-text-weight-semibold mb-4">
+        ${createCategories(post.categories)}
+      </span>
+      <div class="blog-card-excerpt">
+        ${post.excerpt}
+        <a class="button is-dark is-uppercase has-text-weight-bold" href="${
+          post.permalink
+        }">
+          Ler Mais
+        </a>
+      </div>
+    </div>
+  `;
 
-  const content = document.createElement('div');
-  content.classList.add('blog-card-content');
-  const titleLink = document.createElement('a');
-  titleLink.classList.add('is-block');
-  titleLink.setAttribute('href', post.permalink);
-  const title = document.createElement('h4');
-  title.classList.add('blog-card-title');
-  title.innerHTML = post.title;
-  titleLink.appendChild(title);
-  content.appendChild(titleLink);
-
-  const metaDate = document.createElement('span');
-  metaDate.innerHTML = post.date;
-  const metaAuthor = document.createElement('span');
-  metaAuthor.classList.add('has-text-weight-semibold');
-  metaAuthor.innerHTML = post.author;
-  content.appendChild(metaDate);
-  content.innerHTML += ' | ';
-  content.appendChild(metaAuthor);
-
-  const metaCategories = document.createElement('span');
-  metaCategories.classList.add('is-block', 'has-text-weight-semibold', 'mb-4');
-  post.categories.forEach((cat, index, arr) => {
-    const node = document.createElement('a');
-    node.setAttribute('href', cat.permalink);
-    node.text = cat.name;
-    metaCategories.appendChild(node);
-    if (index + 1 < arr.length) {
-      metaCategories.innerHTML += ', ';
-    }
-  });
-  content.appendChild(metaCategories);
-
-  const excerpt = document.createElement('div');
-  excerpt.classList.add('blog-card-excerpt');
-  excerpt.innerHTML = post.excerpt;
-  const link = document.createElement('a');
-  link.classList.add(
-    'button',
-    'is-dark',
-    'is-uppercase',
-    'has-text-weight-bold',
-  );
-  link.setAttribute('href', post.permalink);
-  link.text = 'Ler mais';
-  excerpt.appendChild(link);
-  content.appendChild(excerpt);
-  elem.appendChild(content);
+  elem.innerHTML = html.trim();
 
   return elem;
 }
 
-async function getPosts() {
-  const fields = [
-    'id',
-    'title',
-    'formatted_date',
-    'categories_details',
-    'author_name',
-    'excerpt',
-    'link',
-    'featured_media',
-    'featured_image_src',
-    'type',
-  ].join('&_fields[]=');
-  let url = `wp/v2/posts?per_page=100&_fields[]=${fields}`;
-  const catId = document.querySelector('[data-category-id]');
-  if (catId) {
-    url += `&categories[]=${catId.dataset.categoryId}`;
-  }
-  const posts = await restRequest(url, getPostsInfo);
-  window.allPosts = posts;
-}
-
-function infiniteScrollPosts(posts) {
-  const wrapper = document.querySelector('.blog');
+function infiniteScrollPosts() {
+  const wrapper = qs('.blog');
   const options = { threshold: 0.75 };
   window.observer = new IntersectionObserver(callback, options);
 
-  let size = document.querySelectorAll('.blog-card').length;
-  let last = document.querySelector('.blog-card:last-child');
+  let size = qsAll('.blog-card').length;
+  let last = qs('.blog-card:last-child');
 
   window.observer.observe(last, options);
 
   function callback(entries) {
     entries.forEach((entry) => {
       if (entry.isIntersecting && last.id === entry.target.id) {
-        const postsToAdd = posts.slice(size, size + 2);
+        const postsToAdd = window.posts.slice(size, size + 2);
 
         // Adiciona os elementos ao DOM
-        postsToAdd.forEach((post, index) => {
-          const elem = createCard(post);
-          wrapper.appendChild(elem);
-        });
+        postsToAdd.forEach((post) => wrapper.appendChild(createCard(post)));
 
         // Anima a entrada de cada elemento
         setTimeout(function () {
-          document.querySelectorAll('.blog-card.fade-out').forEach((elem) => {
+          qsAll('.blog-card.fade-out').forEach((elem) => {
             elem.classList.add('fade-in');
             setTimeout(function () {
               elem.classList.remove('fade-out');
@@ -136,11 +68,11 @@ function infiniteScrollPosts(posts) {
           });
         }, 250);
 
-        // Atualização do osberver para o último elemento
-        size = document.querySelectorAll('.blog-card').length;
+        // Atualização do observer para o último elemento
+        size = qsAll('.blog-card').length;
         window.observer.unobserve(last);
-        if (size < posts.length) {
-          last = document.querySelector('.blog-card:last-child');
+        if (size < window.posts.length) {
+          last = qs('.blog-card:last-child');
           window.observer.observe(last, options);
         }
       }
@@ -148,22 +80,4 @@ function infiniteScrollPosts(posts) {
   }
 }
 
-async function postsInit() {
-  await getPosts();
-  const page = window.location.pathname;
-  const path = page.split('/');
-  let categoryName = null;
-  if (path.length > 3 && path[1] === 'blog') {
-    const current = document.querySelector('.current-cat');
-    categoryName = current.firstChild.text;
-  }
-
-  const filteredPosts = categoryName
-    ? window.allPosts.filter((post) =>
-        post.categories.some((cat) => cat.name === categoryName),
-      )
-    : window.allPosts;
-  infiniteScrollPosts(filteredPosts);
-}
-
-document.addEventListener('DOMContentLoaded', postsInit);
+export default infiniteScrollPosts;

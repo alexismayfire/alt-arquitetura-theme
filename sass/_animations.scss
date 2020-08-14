@@ -1,0 +1,86 @@
+.fade-in {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    opacity: 1;
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.fade-out {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.slide-left-out {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    display: block;
+    transform: translateX(-100%);
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.slide-right-out {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    display: block;
+    transform: translateX(100%);
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.slide-down-out {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    display: block;
+    transform: translateY(100%);
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.slide-in {
+  div,
+  span,
+  img,
+  a,
+  h4 {
+    display: block;
+    transform: translate(0, 0);
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.scale-out {
+  div,
+  img,
+  a {
+    transform: scale(0.5);
+    transition: all 300ms ease-in-out;
+  }
+}
+
+.scale-in {
+  img,
+  a {
+    transform: scale(1);
+    transition: all 300ms ease-in-out;
+  }
+}

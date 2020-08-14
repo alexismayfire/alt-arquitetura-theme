@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<main class="container">
+<main class="container" id="project">
     <section class="section columns-is-variable is-6 is-multiline is-relative pb-0">
         <div class="column is-full">
             <h1 class="section-title is-size-2 is-size-4-touch"><?php the_title(); ?></h1>
@@ -80,7 +80,7 @@
             </div>
         </a>
     </section>
-    <section class="section columns is-variable is-6 is-multiline pt-0" id="contato">
+    <section class="section columns is-variable is-6 is-multiline pt-8" id="contato">
         <div class="column is-full">
             <h2 class="section-title"><span class="section-title-prepend">entre em </span>contato</h2>
         </div>
