@@ -4,11 +4,8 @@ const { src, dest, watch, series, parallel } = require('gulp');
 // Importing all the Gulp-related packages we want to use
 const sourcemaps = require('gulp-sourcemaps');
 const sass = require('gulp-sass');
-const concat = require('gulp-concat');
-const babel = require('gulp-babel');
 const webpack = require('webpack-stream');
 const named = require('vinyl-named');
-const uglify = require('gulp-uglify');
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
@@ -19,6 +16,47 @@ const files = {
   scssPath: 'sass/**/*.scss',
   jsPath: 'js/**/*.js',
 };
+
+function scssCriticalTask() {
+  const criticalFiles = [
+    'template-parts/section-header.php',
+    'template-parts/home-hero.php',
+    'template-parts/blog-card.php',
+    'template-parts/categories-links.php',
+    'archive.php',
+    'index.php',
+    'search.php',
+    'searchform.php',
+    'single.php',
+  ];
+  const purifyOptions = {
+    whitelist: [
+      '*figure*',
+      '*is-half*',
+      '*columns*',
+      '*columns:not(.is-desktop)*',
+      '*button-cta*',
+      '*is-size-2*',
+      '*is-size-4-touch*',
+      '*project-detail*',
+      '*projects*',
+      '*button-filter*',
+      '*is-hidden-touch*',
+      '*is-hidden-desktop*',
+      '*blog-categories*',
+      '*widget_categories*',
+      '*wp-block-image*',
+      '*content*',
+      'hr',
+    ],
+  };
+
+  return src(files.scssPath)
+    .pipe(sass())
+    .pipe(purify(criticalFiles, purifyOptions))
+    .pipe(postcss([autoprefixer(), cssnano()]))
+    .pipe(dest('css'));
+}
 
 // Sass task: compiles the style.scss file into style.css
 function scssTask() {
@@ -78,11 +116,14 @@ function watchTask() {
   watch(
     [files.scssPath, files.jsPath],
     { interval: 1000, usePolling: true }, //Makes docker work
-    series(parallel(scssTask, jsTask)),
+    series(parallel(scssCriticalTask, scssTask, jsTask)),
   );
 }
 
 // Export the default Gulp task so it can be run
 // Runs the scss and js tasks simultaneously
 // then runs cacheBust, then watch task
-exports.default = series(parallel(scssTask, jsTask), watchTask);
+exports.default = series(
+  parallel(scssCriticalTask, scssTask, jsTask),
+  watchTask,
+);
