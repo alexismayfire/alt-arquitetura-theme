@@ -75,6 +75,8 @@ add_action( 'pre_get_posts', 'query_all_posts' );
 
 // Plugins
 add_filter( 'wpcf7_autop_or_not', '__return_false' );
+add_filter( 'wpcf7_load_js', '__return_false' );
+add_filter( 'wpcf7_load_css', '__return_false' );
 
 // Load template tags
 require_once get_template_directory() . '/template-tags.php';

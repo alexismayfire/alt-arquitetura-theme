@@ -34,16 +34,34 @@ function load_js() {
         wp_enqueue_script( 'comment-reply', true );
     }
 
-    wp_register_script ('fontawesome', get_template_directory_uri() . '/dist/js/fa.min.js', array(), '5.13.0', true );
+    wp_register_script ( 'fontawesome', get_template_directory_uri() . '/dist/js/fa.min.js', array(), '5.13.0', true );
     wp_enqueue_script( 'fontawesome', get_template_directory_uri() . '/dist/js/fa.min.js', array(), '5.13.0', true );
 
     if ( ! is_admin() ) {
+        wp_deregister_script( 'wp-embed' );
         wp_deregister_script( 'jquery' );
-        wp_deregister_script( 'jquery-migrate' );
+        wp_register_script( 'jquery', 'https://code.jquery.com/jquery-3.5.1.min.js', array(), '3.5.1', true );
+
+        if ( is_front_page() || is_singular( 'project' ) ) {
+            wp_enqueue_script( 'jquery' );
+        
+            if ( function_exists( 'wpcf7_enqueue_scripts' ) ) {
+              wpcf7_enqueue_scripts();
+            }
+             
+            if ( function_exists( 'wpcf7_enqueue_styles' ) ) {
+              wpcf7_enqueue_styles();
+            }
+        } else {
+            wp_deregister_script( 'jquery-migrate' );
+        }
     }
 }
 
 add_action( 'wp_enqueue_scripts', 'load_js' );
+// Remove emojis from WordPress
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
 
 // NoScript filter to load CSS in demand
 function add_noscript_style_filter( $tag, $handle, $href, $media ) {
