@@ -22,8 +22,13 @@ function load_editor_css() {
     wp_enqueue_style( 'main_editor' );
 }
 
+function load_admin_css() {
+    wp_enqueue_style( 'admin-styles', get_template_directory_uri() . '/css/admin.css', array(), THEME_VERSION, 'all' );
+}
+
 add_action( 'wp_enqueue_scripts', 'load_css' );
 add_action( 'enqueue_block_editor_assets', 'load_editor_css' );
+add_action( 'admin_enqueue_scripts', 'load_admin_css' );
 
 // Load Javascript
 function load_js() {
@@ -34,16 +39,53 @@ function load_js() {
         wp_enqueue_script( 'comment-reply', true );
     }
 
-    wp_register_script ('fontawesome', get_template_directory_uri() . '/dist/js/fa.min.js', array(), '5.13.0', true );
+    wp_register_script ( 'fontawesome', get_template_directory_uri() . '/dist/js/fa.min.js', array(), '5.13.0', true );
     wp_enqueue_script( 'fontawesome', get_template_directory_uri() . '/dist/js/fa.min.js', array(), '5.13.0', true );
 
     if ( ! is_admin() ) {
+        wp_deregister_script( 'wp-embed' );
         wp_deregister_script( 'jquery' );
-        wp_deregister_script( 'jquery-migrate' );
+        wp_register_script( 'jquery', 'https://code.jquery.com/jquery-3.5.1.min.js', array(), '3.5.1', true );
+
+        if ( is_front_page() || is_singular( 'project' ) ) {
+            wp_enqueue_script( 'jquery' );
+        
+            if ( function_exists( 'wpcf7_enqueue_scripts' ) ) {
+              wpcf7_enqueue_scripts();
+            }
+             
+            if ( function_exists( 'wpcf7_enqueue_styles' ) ) {
+              wpcf7_enqueue_styles();
+            }
+        } else {
+            wp_deregister_script( 'jquery-migrate' );
+        }
+    }
+}
+
+function load_ga() { 
+    $ga_code = altarq_get_theme_option( 'ga_code' );
+    $ga_debug = altarq_get_theme_option( 'ga_debug' );
+    if ( ! is_user_logged_in() && $ga_code && ! $ga_debug ) { 
+?>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-<?php echo $ga_code; ?>"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '<?php echo $ga_code; ?>');
+        </script>
+<?php 
     }
 }
 
 add_action( 'wp_enqueue_scripts', 'load_js' );
+add_action( 'wp_head', 'load_ga' );
+// Remove emojis from WordPress
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
 
 // NoScript filter to load CSS in demand
 function add_noscript_style_filter( $tag, $handle, $href, $media ) {

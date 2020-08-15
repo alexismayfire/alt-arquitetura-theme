@@ -1,6 +1,6 @@
 
 <?php wp_footer(); ?>
-<!--<script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js"></script>-->
+
 <script type="text/javascript">
   var links = document.getElementsByTagName('link');
   var godefer = links[links.length - 1];
@@ -17,5 +17,15 @@
   themeMainCSS.type = 'text/css';
   godefer.parentNode.appendChild(themeMainCSS);
 </script>
+
+<?php if ( ! is_user_logged_in() && altarq_get_theme_option( 'ga_code' ) && ! altarq_get_theme_option( 'ga_debug' ) ): ?>
+
+<script>
+  document.addEventListener( 'wpcf7mailsent', function( event ) {
+   gtag('event', 'envio', {'event_category': 'Formulário'});
+  }, false );
+</script>
+
+<?php endif; ?>
 </body>
 </html>

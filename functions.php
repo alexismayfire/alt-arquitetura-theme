@@ -5,6 +5,7 @@ define( 'THEME_VERSION', '1.1.0');
 require_once get_template_directory() . '/core/post-types.php';
 require_once get_template_directory() . '/core/rest-api.php';
 require_once get_template_directory() . '/core/scripts.php';
+require_once get_template_directory() . '/core/options.php';
 
 // Theme options
 add_theme_support( 'menus' );
@@ -25,8 +26,8 @@ add_theme_support(
 // Menus
 register_nav_menus( 
     array(
-        'top-menu' => 'Menu Desktop',
-        'mobile-menu' => 'Menu Mobile',
+        'main' => 'Menu Principal',
+        'social-networks' => 'Redes Sociais',
     )
 );
 
@@ -75,6 +76,8 @@ add_action( 'pre_get_posts', 'query_all_posts' );
 
 // Plugins
 add_filter( 'wpcf7_autop_or_not', '__return_false' );
+add_filter( 'wpcf7_load_js', '__return_false' );
+add_filter( 'wpcf7_load_css', '__return_false' );
 
 // Load template tags
 require_once get_template_directory() . '/template-tags.php';
