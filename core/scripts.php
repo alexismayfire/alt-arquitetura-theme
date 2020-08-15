@@ -22,8 +22,13 @@ function load_editor_css() {
     wp_enqueue_style( 'main_editor' );
 }
 
+function load_admin_css() {
+    wp_enqueue_style( 'admin-styles', get_template_directory_uri() . '/css/admin.css', array(), THEME_VERSION, 'all' );
+}
+
 add_action( 'wp_enqueue_scripts', 'load_css' );
 add_action( 'enqueue_block_editor_assets', 'load_editor_css' );
+add_action( 'admin_enqueue_scripts', 'load_admin_css' );
 
 // Load Javascript
 function load_js() {
@@ -58,7 +63,26 @@ function load_js() {
     }
 }
 
+function load_ga() { 
+    $ga_code = altarq_get_theme_option( 'ga_code' );
+    $ga_debug = altarq_get_theme_option( 'ga_debug' );
+    if ( ! is_user_logged_in() && $ga_code && ! $ga_debug ) { 
+?>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-<?php echo $ga_code; ?>"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '<?php echo $ga_code; ?>');
+        </script>
+<?php 
+    }
+}
+
 add_action( 'wp_enqueue_scripts', 'load_js' );
+add_action( 'wp_head', 'load_ga' );
 // Remove emojis from WordPress
 remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 remove_action( 'wp_print_styles', 'print_emoji_styles' );
