@@ -6,7 +6,7 @@
         <a class="is-block" href="<?php the_permalink(); ?>">
             <h4 class="blog-card-title"><?php the_title(); ?></h4>
         </a>
-        <span><?php echo get_the_date(); ?></span> | <span class="has-text-weight-semibold"><?php the_author() ?></span>
+        <span><?php echo get_the_date(); ?></span> | <?php echo get_post_author_tag(); ?>
         <span class="is-block has-text-weight-semibold mb-4"><?php the_terms ( $post->ID, 'category' ); ?></span>
         <div class="blog-card-excerpt">
             <?php the_excerpt(); ?>
