@@ -64,6 +64,43 @@ function custom_sidebars() {
 }
 add_action( 'widgets_init', 'custom_sidebars' );
 
+// Blocks
+add_filter( 'render_block', 'render_pinterest_button_project_image', 10, 2 );
+
+function render_pinterest_button_project_image( $block_content, $block ) {
+	if ( 'core/image' !== $block['blockName'] || ! is_singular( 'project' ) ) {
+		return $block_content;
+    }
+
+    $html = $block['innerHTML'];
+
+    $start = strpos( $html, 'src=' ) + 5;
+    $end = strpos( $html, '"', $start ) - $start;
+    $media = substr( $html, $start, $end );
+
+    $start = strpos( $html, '<figcaption>');
+    $end = strpos( $html, '</figcaption>');
+    $caption = strip_tags( substr( $html, $start, $end ) );
+    $site_name = get_bloginfo( 'name' );
+    $title = get_the_title();
+    $description = $site_name . ' | Projeto de Arquitetura | ' . $title; 
+
+    $pin_link  = 'https://pt.pinterest.com/pin/create/button/';
+    $pin_link .= '?url=' . get_the_permalink();
+    $pin_link .= '&media=' . $media;
+    $pin_link .= '&description=' . $description;
+    
+    $output  = '<div class="image-block-pinterest is-relative">';
+    $output .= '<a class="button-pinterest is-size-6" target="_blank" href="' . $pin_link . '">';
+    $output .= '<i class="fab fa-md fa-pinterest-p"></i>';
+    $output .= '<span class="ml-2 has-text-weight-semibold">Salvar</span>';
+    $output .= '</a>';
+	$output .= $block_content;
+    $output .= '</div>';
+    
+	return $output;
+}
+
 // Posts action
 function query_all_posts( $query ) {
     if ( ! is_admin() && $query->is_main_query() ) {

@@ -107,6 +107,30 @@ select {
   }
 }
 
+.button-pinterest {
+  align-items: center;
+  display: inline-flex;
+  right: 1em;
+  position: absolute;
+  top: 1em;
+  z-index: 0;
+
+  background-color: $primary;
+  color: $gray;
+  padding: 0.5em;
+
+  &:hover {
+    background-color: darken($primary, 10%);
+    color: darken($gray, 10%);
+  }
+}
+
+.image-block-pinterest:hover {
+  .button-pinterest {
+    z-index: 10;
+  }
+}
+
 .wp-block-image img {
   width: 100%;
 }
