@@ -56,9 +56,15 @@ function get_comment_datetime_fmt( $comment, $callback ) {
 }
 
 function get_related_meta( $post_id ) {
+    $alternative_featured = get_field( 'projeto_destaque' );
+    if ( $alternative_featured ) {
+        $image = $alternative_featured['sizes']['project-small'];
+    } else {
+        $image = get_the_post_thumbnail_url( $post_id, 'project-small' );
+    }
     return array(
         'permalink' => get_the_permalink( $post_id ),
-        'img' => get_the_post_thumbnail_url( $post_id, 'project-small' ),
+        'img' => $image,
         'title' => get_the_title( $post_id ),
     );
 }
