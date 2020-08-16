@@ -67,6 +67,70 @@ select {
   display: flex;
 }
 
+.button-whatsapp {
+  bottom: 1rem;
+  position: fixed;
+  right: 1rem;
+  z-index: 100;
+
+  @include desktop {
+    bottom: 2rem;
+    right: 2rem;
+  }
+
+  @include touch {
+    &.filter-spacing {
+      bottom: 4.5rem;
+    }
+  }
+
+  svg.fa-whatsapp {
+    color: $gray;
+  }
+
+  svg.fa-circle {
+    color: $primary;
+  }
+
+  &:hover {
+    svg {
+      transition: all 300ms ease-in-out;
+    }
+
+    svg.fa-whatsapp {
+      color: lighten($gray, 10%);
+    }
+
+    svg.fa-circle {
+      color: lighten($primary, 10%);
+    }
+  }
+}
+
+.button-pinterest {
+  align-items: center;
+  display: inline-flex;
+  right: 1em;
+  position: absolute;
+  top: 1em;
+  z-index: 0;
+
+  background-color: $primary;
+  color: $gray;
+  padding: 0.5em;
+
+  &:hover {
+    background-color: darken($primary, 10%);
+    color: darken($gray, 10%);
+  }
+}
+
+.image-block-pinterest:hover {
+  .button-pinterest {
+    z-index: 10;
+  }
+}
+
 .wp-block-image img {
   width: 100%;
 }

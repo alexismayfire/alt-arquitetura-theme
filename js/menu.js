@@ -12,10 +12,12 @@ function toggleMenu() {
   if (window.isMenuOpen) {
     window.currentScrollY = window.scrollY;
     document.body.style.position = 'fixed';
+    qs('.button-whatsapp').classList.add('is-hidden');
   } else {
     document.body.style.position = '';
     window.scrollTo(0, window.currentScrollY || 0);
     window.currentScrollY = 0;
+    qs('.button-whatsapp').classList.remove('is-hidden');
   }
 }
 

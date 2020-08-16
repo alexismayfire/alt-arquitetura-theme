@@ -18,7 +18,7 @@ function html_comment_field( $name, $label, $type ) {
         $output .= "</div>";
     } else {
         $output .= "<label class=\"label\" for=\"$name\">$label</label>";
-        $output .= "<span class=\"wpcf7-form-control-wrap\">";
+        $output .= "<span class=\"wpcf7-form-control-wrap is-relative\">";
         if ( $type === 'textarea' ) {
             $output .= "<textarea class=\"textarea\" id=\"$name\" name=\"$name\" type=\"$type\"></textarea>";
         } else {
@@ -61,6 +61,23 @@ function get_related_meta( $post_id ) {
         'img' => get_the_post_thumbnail_url( $post_id, 'project-small' ),
         'title' => get_the_title( $post_id ),
     );
+}
+
+function get_post_author_tag() { 
+    $output = '';
+    $url = get_the_author_url();
+    $author = get_the_author();
+
+    if ( $url ) {
+        $output .= '<a href="'.$url.'" target="_blank" class="has-text-primary has-text-weight-semibold">';
+        $output .= '<span class="mr-1">'.$author.'</span>';
+        $output .= '<i class="fab fa-md fa-linkedin"></i>';
+        $output .= '</a>';
+    } else {
+        $output = '<span class="has-text-primary has-text-weight-semibold">'.$author.'</span>';
+    }
+
+    return $output;
 }
 
 ?>
