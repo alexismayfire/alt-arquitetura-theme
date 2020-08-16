@@ -1,5 +1,3 @@
-// 242 kb / 32.7 kb
-
 @charset "utf-8";
 
 @font-face {
@@ -23,6 +21,7 @@ $input-focus-box-shadow-color: bulmaRgba($primary, 0.25) !default;
 @import '../node_modules/bulma/sass/elements/content.sass';
 @import '../node_modules/bulma/sass/elements/icon.sass';
 @import '../node_modules/bulma/sass/elements/image.sass';
+@import '../node_modules/bulma/sass/elements/tag.sass';
 @import '../node_modules/bulma/sass/elements/title.sass';
 @import '../node_modules/bulma/sass/form/shared.sass';
 @import '../node_modules/bulma/sass/form/input-textarea.sass';
