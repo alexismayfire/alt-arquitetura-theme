@@ -38,15 +38,8 @@ add_image_size( 'blog-small', 300, 200, true );
 add_image_size( 'project-gallery', 1500, 600, true );
 add_image_size( 'project-landscape', 700, 500, false );
 add_image_size( 'project-portrait', 500, 700, false );
-add_image_size( 'project-large', 430, 330, true );
+add_image_size( 'project-large', 500, 385, true );
 add_image_size( 'project-small', 300, 150, true );
-
-function my_custom_sizes( $sizes ) {
-    return array_merge( $sizes, array(
-        'project-large' => __( 'Projeto Home' ),
-    ) );
-}
-add_filter( 'image_size_names_choose', 'my_custom_sizes' );
 
 function filter_site_upload_size_limit( $size ) {
     return 5 * 1024 * 1024;
@@ -58,13 +51,31 @@ function custom_sidebars() {
     register_sidebar( array(
         'name' => 'Blog Sidebar',
         'id' => 'blog-sidebar',
-        'before_title' => '<h4 class="card-title">',
+        'before_title' => '<h4>',
         'after_title' => '</h4>'
     ) );
 }
 add_action( 'widgets_init', 'custom_sidebars' );
 
 // Blocks
+add_filter( 'init', 'remove_editor' );
+
+function remove_editor() {
+    if ( isset( $_GET['post'] ) ) {
+        $id = $_GET['post'];
+        $template = get_post_meta( $id, '_wp_page_template', true );
+        // If is front page, $template will be empty 
+        switch( $template ) {
+            case 'page-projects.php':
+            case '':
+                remove_post_type_support( 'page', 'editor' );
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 add_filter( 'render_block', 'render_pinterest_button_project_image', 10, 2 );
 
 function render_pinterest_button_project_image( $block_content, $block ) {

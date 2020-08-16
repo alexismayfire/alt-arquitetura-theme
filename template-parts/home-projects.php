@@ -10,7 +10,7 @@
     </div>
     <?php
 
-    $projects = get_field('projetos_itens');
+    $projects = get_field( 'projetos_itens' );
     $featured_projects = [];
     $i = 0;
 
@@ -18,12 +18,18 @@
         $terms = get_the_terms( $post->ID, 'segments' );
         $segment = array_shift( $terms );
         $permalink = get_permalink( $post->ID );
+        $alternative_featured = get_field( 'projeto_destaque' );
+        if ( $alternative_featured ):
+            $image = $alternative_featured['sizes']['project-large'];
+        else:
+            $image = get_the_post_thumbnail_url( $post->ID, 'project-large' );
+        endif;
 
         $featured_projects[] = array(
             'id' => $post->ID,
             'title' => get_the_title(),
             'segment' => $segment->name,
-            'image' => get_the_post_thumbnail_url( $post->ID, 'project-large' ),
+            'image' => $image,
             'slug' => $permalink,
         );
 
@@ -38,8 +44,7 @@
         <?php elseif ( $i === 1 ): ?>
         <div class="column is-half-desktop carousel-card">
             <a href="<?php echo $permalink; ?>">
-                <img class="carousel-card-image" src="<?php the_post_thumbnail_url( 'project-large' ); ?>" alt="<?php the_title(); ?>" />
-                
+                <img class="carousel-card-image" src="<?php echo $image; ?>" alt="<?php the_title(); ?>" />
             </a>
             <a href="<?php echo $permalink; ?>">
                 <div class="carousel-card-content">
