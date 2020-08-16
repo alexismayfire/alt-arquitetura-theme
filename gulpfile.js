@@ -41,6 +41,8 @@ function scssCriticalTask() {
       '*mr-1*',
       '*has-text-primary*',
       '*has-text-weight-semibold*',
+      '*section-title*',
+      '*section-title-prepend*',
       '*project-detail*',
       '*projects*',
       '*button-filter*',

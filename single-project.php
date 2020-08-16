@@ -55,6 +55,40 @@
 
             endwhile;
         endif;
+
+        $args = array(
+            'meta_key' => '_wp_page_template',
+            'meta_value' => 'page-projects.php',
+            'hierarchical' => 0,
+        );
+        $pages = get_pages( $args );
+        $base_page = 0;
+        foreach ( $pages as $page ): 
+            $base_page = $page->ID;
+        endforeach;
+
+        $footer_content = get_field( 'conteudo_rodape', $base_page );
+        if ( $footer_content ):
+            if ( strpos( $footer_content, '$titulo' ) ):
+                $footer_content = str_replace( '$titulo', get_the_title(), $footer_content );
+            endif;
+
+            if ( strpos( $footer_content, '$cliente' ) ):
+                $footer_content = str_replace( '$cliente', get_field( 'projeto_cliente' ), $footer_content );
+            endif;
+            
+            if ( strpos( $footer_content, '$segmento_singular' ) ):
+                $footer_content = str_replace( '$segmento_singular', strtolower( $cat[0]->name ), $footer_content );
+            endif;
+
+            if ( strpos( $footer_content, '$segmento_plural' ) ):
+                $footer_content = str_replace( '$segmento_plural', get_field( 'segmento_plural', $cat[0] ), $footer_content );
+            endif;
+
+            echo $footer_content;
+        
+        endif;
+
         ?>
             <div class="columns is-full is-mobile has-text-centered is-hidden-desktop">
                 <div class="column is-half-touch is-relative project-navmobile">
@@ -80,17 +114,25 @@
             </div>
         </a>
     </section>
-    <section class="section columns is-variable is-6 is-multiline pt-8" id="contato">
+    <?php 
+    $contact_title = get_field( 'contato_titulo', $base_page );
+    $contact_content = get_field( 'contato_conteudo', $base_page );
+    $contact_shortcode = get_field( 'contato_shortcode', $base_page );
+    $contact_id = get_field( 'contato_id', $base_page );
+    ?>
+    <section class="section columns is-variable is-6 is-multiline pt-8" id="<?php echo $contact_id; ?>">
         <div class="column is-full">
-            <h2 class="section-title"><span class="section-title-prepend">entre em </span>contato</h2>
+        <?php
+        $section_title = explode( ' ', $contact_title );
+        if ( count( $section_title ) > 1 ): 
+            $featured_title = array_pop( $section_title ); ?>
+            <h2 class="section-title"><span class="section-title-prepend"><?php echo join( $section_title, ' ' ); ?></span><?php echo $featured_title ?></h2>
+        <?php else: ?>
+            <h2 class="section-title"><?php echo array_pop( $section_title ); ?></h2>
+        <?php endif; ?>
         </div>
-        <div class="column is-full">
-            <p>Queremos conversar sobre os seus projetos.</p>
-            <p>Use essa área para tirar dúvidas, enviar questões e comentários.</p>
-        </div>
-        <div class="column is-full form-wrapper">
-            <?php echo do_shortcode( '[contact-form-7 id="98" title="Contato Home"]' ); ?>
-        </div>
+        <div class="column is-full"><?php echo $contact_content; ?></div>
+        <div class="column is-full form-wrapper"><?php echo $contact_shortcode; ?></div>
     </section>
 </main>
 

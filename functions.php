@@ -58,6 +58,24 @@ function custom_sidebars() {
 add_action( 'widgets_init', 'custom_sidebars' );
 
 // Blocks
+add_filter( 'init', 'remove_editor' );
+
+function remove_editor() {
+    if ( isset( $_GET['post'] ) ) {
+        $id = $_GET['post'];
+        $template = get_post_meta( $id, '_wp_page_template', true );
+        // If is front page, $template will be empty 
+        switch( $template ) {
+            case 'page-projects.php':
+            case '':
+                remove_post_type_support( 'page', 'editor' );
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 add_filter( 'render_block', 'render_pinterest_button_project_image', 10, 2 );
 
 function render_pinterest_button_project_image( $block_content, $block ) {
