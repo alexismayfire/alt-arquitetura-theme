@@ -1,6 +1,6 @@
 <?php
 
-define( 'THEME_VERSION', '1.1.0');
+define( THEME_VERSION, '1.1.0');
 
 require_once get_template_directory() . '/core/post-types.php';
 require_once get_template_directory() . '/core/rest-api.php';
