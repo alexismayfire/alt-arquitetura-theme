@@ -21,7 +21,7 @@ function execute {
                 git commit -m "Release da versão $1"
                 git tag v$1
                 rm -f *.zip
-                zip -qr theme-v$1.zip ./core ./dist ./fonts ./template-parts *.css *.php
+                zip -qr theme-v$1.zip ./core ./dist ./fonts ./template-parts *.css *.php *.png
                 echo -e "Versão $1 criada com sucesso, tag do git adicionada."
                 echo -e "Um novo arquivo ZIP, contendo o tema pronto para adicionar ao WordPress, foi adicionado ao projeto."
                 echo -e "O upload deve ser feito separadamente no Github."
