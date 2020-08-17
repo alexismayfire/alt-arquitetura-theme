@@ -2,7 +2,8 @@
 $whatsapp_number = altarq_get_theme_option( 'whatsapp_number' );
 $whatsapp_message = altarq_get_theme_option( 'whatsapp_message' );
 
-$whatsapp_link = 'https://wa.me/55'.$whatsapp_number.'?text='.str_replace( PHP_EOL, '%0a', $whatsapp_message );
+if ( $whatsapp_number ):
+  $whatsapp_link = 'https://wa.me/55'.$whatsapp_number.'?text='.str_replace( PHP_EOL, '%0a', $whatsapp_message );
 ?>
 
 <div class="button-whatsapp <?php if ( is_home() | is_archive() | is_search() | is_page_template( 'page-projects.php' ) ): echo 'filter-spacing'; endif; ?>">
@@ -15,6 +16,8 @@ $whatsapp_link = 'https://wa.me/55'.$whatsapp_number.'?text='.str_replace( PHP_E
     </div>
   </a>
 </div>
+
+<?php endif; ?>
 
 <?php wp_footer(); ?>
 
